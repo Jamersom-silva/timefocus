@@ -1,20 +1,26 @@
-from fastapi import APIRouter, HTTPException
-from timefocusBack.core.auth import create_access_token
+from fastapi import Depends, HTTPException, status
+from fastapi.security import OAuth2PasswordBearer
+from jose import JWTError, jwt
+from datetime import datetime, timedelta
 
-router = APIRouter()
+SECRET_KEY = "sua_chave_secreta"
+ALGORITHM = "HS256"
+ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
-users = {}
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
-@router.post("/register")
-def register(username: str, password: str):
-    if username in users:
-        raise HTTPException(status_code=400, detail="Usuário já existe")
-    users[username] = password
-    return {"msg": "Usuário registrado com sucesso"}
+def verify_token(token: str = Depends(oauth2_scheme)):
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        return payload
+    except JWTError:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Token inválido"
+        )
 
-@router.post("/login")
-def login(username: str, password: str):
-    if users.get(username) != password:
-        raise HTTPException(status_code=401, detail="Credenciais inválidas")
-    token = create_access_token({"sub": username})
-    return {"access_token": token}
+def create_access_token(data: dict):
+    to_encode = data.copy()
+    expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    to_encode.update({"exp": expire})
+    return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)

@@ -1,6 +1,8 @@
 # Adicione em interface/report.py
 from rich.console import Console
 from rich.table import Table
+from ..interface.auth_api import verify_token
+from ..core.auth import verify_token
 
 def generate_report():
     console = Console()
