@@ -2,6 +2,10 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from timefocusBack.core.report import router as report_router
 from timefocusBack.core.achievements import router as achievements_router
+from timefocusBack.core import  score
+from timefocusBack.core.session import router as session_router
+
+
 
 app = FastAPI()
 
@@ -22,6 +26,8 @@ app.add_middleware(
 # Incluindo os routers das diferentes partes do aplicativo
 app.include_router(report_router)
 app.include_router(achievements_router)
+app.include_router(score.router)
+app.include_router(session_router)
 
 @app.get("/")
 async def root():

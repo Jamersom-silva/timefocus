@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 from collections import defaultdict
 from typing import List
 from ..interface.auth_api import verify_token
-
+from timefocusBack.core.session import fake_db_sessions
 router = APIRouter()
 
 router = APIRouter()
@@ -23,7 +23,7 @@ sessions = [
 @router.get("/reports/daily")
 def daily_report(user: dict = Depends(verify_token)):
     today = datetime.now().date().isoformat()
-    total_today = sum(s["duration"] for s in sessions if s["date"] == today)
+    total_today = sum(s["duration"] for s in fake_db_sessions if s["date"] == today)
     return {"date": today, "total_minutes": total_today}
 
 @router.get("/reports/weekly")
