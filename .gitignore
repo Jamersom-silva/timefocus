@@ -1,0 +1,51 @@
+# Ambiente virtual
+venv/
+.env
+.env.*
+
+# Bytecode e cache Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pdb
+*.pyc
+
+# FastAPI
+instance/
+*.sqlite3
+
+# Logs
+*.log
+
+# VSCode
+.vscode/
+
+# Arquivos do sistema
+.DS_Store
+Thumbs.db
+
+# Node e Vite (Frontend)
+node_modules/
+dist/
+build/
+
+# Testes
+htmlcov/
+.coverage
+.tox/
+.pytest_cache/
+.cache/
+nosetests.xml
+coverage.xml
+*.cover
+
+# IDEs e ferramentas
+.idea/
+*.iml
+*.swp
+*.swo
+
+# Outros
+*.bak
+*.tmp
