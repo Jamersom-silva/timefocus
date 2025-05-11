@@ -2,14 +2,23 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from timefocusBack.core.report import router as report_router
 from timefocusBack.core.achievements import router as achievements_router
-from timefocusBack.core import  score
+from timefocusBack.core import score
 from timefocusBack.core.session import router as session_router
+from core import models
+from core.auth import engine
+from core.database import init_db
+from interface import auth_api
+from interface import profile_api
+# Inicializando o banco de dados
+init_db()
+models.Base.metadata.create_all(bind=engine)
 
-
-
+# Criando o app FastAPI
 app = FastAPI()
 
-# Configuração do CORS
+app.include_router(auth_api.router)
+app.include_router(profile_api.router)
+# Configuração do CORS (Cross-Origin Resource Sharing)
 origins = [
     "http://localhost:5173",  # Origem do frontend durante o desenvolvimento
     # Adicione outras origens conforme necessário
