@@ -1,22 +1,12 @@
+import Header from "../../components/Header/Header";
+
 export default function HomePage() {
     return (
         <div className="home-page">
-           
-            <header className="button-home">
-                <button>Login</button>
-                <button>Registro</button>
-                <button>Pomodoro</button>
-                <button>Dashboard</button>
-                <button>Exercises</button>
-                <button>Reports</button>
-                <button>Subjects</button>
-            </header>
-
-           
-            <div className="body-home">
-                <h1>TimeFocus</h1>
+            <Header />
+            <div className="body-home p-4">
+                <h1 className="text-3xl font-bold">TimeFocus</h1>
                 <p>Otimize seus estudos com métodos eficientes</p>
-               
             </div>
         </div>
     );
