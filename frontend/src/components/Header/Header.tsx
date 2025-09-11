@@ -1,15 +1,18 @@
 import { useNavigate } from "react-router-dom";
-import Logo from "../../assets/logo.png"; // exemplo, se tiver um logo
+// import Logo from "../../assets/logo.png"; // exemplo, se tiver um logo
 
 export default function Header() {
     const navigate = useNavigate();
 
     return (
         <header className="flex items-center justify-between p-4 bg-gray-100 shadow">
-            {/* Logo */}
-            <div className="logo">
-                <img src={Logo} alt="TimeFocus Logo" className="h-10" />
-            </div>
+           
+          {/*
+<div className="logo">
+    <img src={Logo} alt="TimeFocus Logo" className="h-10" />
+</div>
+*/}
+
 
             {/* Botões de navegação */}
             <nav className="flex gap-2">
