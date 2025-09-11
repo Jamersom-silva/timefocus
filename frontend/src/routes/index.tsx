@@ -6,6 +6,7 @@ import SubjectsPage from '../pages/Subjects/Subjects';
 import ReportsPage from '../pages/Reports/Reports';
 import PromodoroPage from '../pages/Pomodoro/Pomodoro';
 import ExercisesPage from '../pages/Exercises/Exercises';
+import HomePage from '../pages/Home/Home';
 
 
 
@@ -20,6 +21,7 @@ export function AppRoutes() {
         <Route path="/promodoro" element= {<PromodoroPage/>}/>
         <Route path="/reports" element={<ReportsPage/>} />
         <Route path="subjects" element={<SubjectsPage/>} />
+        <Route path="home" element={<HomePage/>} />
       </Routes>
     </BrowserRouter>
   );
