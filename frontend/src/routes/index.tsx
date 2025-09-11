@@ -1,0 +1,26 @@
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import LoginPage from '../pages/Login/Login';
+import RegisterPage from '../pages/Register/Register';
+import DashboardPage from '../pages/Dashboard/Dashboard';
+import SubjectsPage from '../pages/Subjects/Subjects';
+import ReportsPage from '../pages/Reports/Reports';
+import PromodoroPage from '../pages/Pomodoro/Pomodoro';
+import ExercisesPage from '../pages/Exercises/Exercises';
+
+
+
+export function AppRoutes() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/dashboard" element={<DashboardPage />} />
+        <Route path="/exercises" element={<ExercisesPage />} />
+        <Route path="/promodoro" element= {<PromodoroPage/>}/>
+        <Route path="/reports" element={<ReportsPage/>} />
+        <Route path="subjects" element={<SubjectsPage/>} />
+      </Routes>
+    </BrowserRouter>
+  );
+}
