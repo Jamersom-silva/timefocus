@@ -1,10 +1,10 @@
 import Header from "../../components/Header/Header";
 
-export default function PromodoroPage() {
+export default function PomodoroPage() {
   return (
     <div className="home-page">
       <Header />
-      <h1>Promodoro Page</h1>
+      <h1>Pomodoro Page</h1>
     </div>
   );
 }

@@ -4,7 +4,7 @@ import RegisterPage from '../pages/Register/Register';
 import DashboardPage from '../pages/Dashboard/Dashboard';
 import SubjectsPage from '../pages/Subjects/Subjects';
 import ReportsPage from '../pages/Reports/Reports';
-import PromodoroPage from '../pages/Pomodoro/Pomodoro';
+import PomodoroPage from '../pages/Pomodoro/Pomodoro';
 import ExercisesPage from '../pages/Exercises/Exercises';
 import HomePage from '../pages/Home/Home';
 
@@ -18,10 +18,10 @@ export function AppRoutes() {
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/exercises" element={<ExercisesPage />} />
-        <Route path="/promodoro" element= {<PromodoroPage/>}/>
+        <Route path="/pomodoro" element= {<PomodoroPage/>}/>
         <Route path="/reports" element={<ReportsPage/>} />
-        <Route path="subjects" element={<SubjectsPage/>} />
-        <Route path="home" element={<HomePage/>} />
+        <Route path="/subjects" element={<SubjectsPage/>} />
+        <Route path="/home" element={<HomePage/>} />
       </Routes>
     </BrowserRouter>
   );
