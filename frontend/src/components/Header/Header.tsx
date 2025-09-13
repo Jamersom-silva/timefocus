@@ -23,6 +23,7 @@ export default function Header() {
                 <button onClick={() => navigate("/exercises")}>Exercises</button>
                 <button onClick={() => navigate("/reports")}>Reports</button>
                 <button onClick={() => navigate("/subjects")}>Subjects</button>
+                <button onClick={() => navigate("/profile")}>profile</button>
             </nav>
         </header>
     );
