@@ -1,5 +1,5 @@
-from pydantic import BaseModel, EmailStr
-from typing import Optional, List
+from pydantic import BaseModel, EmailStr, ConfigDict
+from typing import Optional
 from datetime import datetime
 
 # =============================
@@ -12,11 +12,15 @@ class UserBase(BaseModel):
 class UserCreate(UserBase):
     password: str
 
+class UserLogin(BaseModel):
+    email: EmailStr
+    password: str
+
 class UserOut(UserBase):
     id: int
+    created_at: datetime
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
 
 # =============================
 # PomodoroCycle Schemas
@@ -30,16 +34,17 @@ class PomodoroCycleCreate(PomodoroCycleBase):
 class PomodoroCycleOut(PomodoroCycleBase):
     id: int
     user_id: int
-    completed_at: datetime
+    start_time: datetime
+    end_time: datetime
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
 
 # =============================
 # Subject Schemas
 # =============================
 class SubjectBase(BaseModel):
     name: str
+    description: Optional[str] = None
 
 class SubjectCreate(SubjectBase):
     pass
@@ -48,8 +53,7 @@ class SubjectOut(SubjectBase):
     id: int
     user_id: int
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
 
 # =============================
 # Exercise Schemas
@@ -57,23 +61,25 @@ class SubjectOut(SubjectBase):
 class ExerciseBase(BaseModel):
     question: str
     answer: Optional[str] = None
-    completed: Optional[bool] = False
+    completed: bool = False
+    ai_generated: bool = False
 
 class ExerciseCreate(ExerciseBase):
     subject_id: int
 
 class ExerciseOut(ExerciseBase):
     id: int
+    user_id: int
     subject_id: int
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
 
 # =============================
 # Report Schemas
 # =============================
 class ReportBase(BaseModel):
-    content: str
+    type: str  # e.g., "pomodoro", "exercise", etc.
+    data: str  # JSON string ou descrição resumida
 
 class ReportCreate(ReportBase):
     user_id: int
@@ -83,5 +89,4 @@ class ReportOut(ReportBase):
     user_id: int
     created_at: datetime
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
