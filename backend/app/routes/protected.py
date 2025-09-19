@@ -1,10 +1,16 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from typing import List
+
 from ..database import get_db
 from ..models import User, PomodoroCycle, Subject, Exercise
-from ..schemas import UserOut, PomodoroCycleOut, PomodoroCycleCreate, SubjectOut, SubjectCreate, ExerciseOut, ExerciseCreate
+from ..schemas import (
+    UserOut, 
+    PomodoroCycleOut, PomodoroCycleCreate, 
+    SubjectOut, SubjectCreate, 
+    ExerciseOut, ExerciseCreate
+)
 from ..core.security import get_current_user
 
 router = APIRouter(prefix="/api", tags=["protected"])
@@ -36,9 +42,10 @@ async def get_pomodoros(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    result = await db.execute(select(PomodoroCycle).filter(PomodoroCycle.user_id == current_user.id))
-    cycles = result.scalars().all()
-    return cycles
+    result = await db.execute(
+        select(PomodoroCycle).filter(PomodoroCycle.user_id == current_user.id)
+    )
+    return result.scalars().all()
 
 # ----------------------------
 # Subjects
@@ -49,7 +56,11 @@ async def create_subject(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    new_subject = Subject(name=subject.name, description=subject.description, user_id=current_user.id)
+    new_subject = Subject(
+        name=subject.name, 
+        description=subject.description, 
+        user_id=current_user.id
+    )
     db.add(new_subject)
     await db.commit()
     await db.refresh(new_subject)
@@ -60,9 +71,10 @@ async def get_subjects(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    result = await db.execute(select(Subject).filter(Subject.user_id == current_user.id))
-    subjects = result.scalars().all()
-    return subjects
+    result = await db.execute(
+        select(Subject).filter(Subject.user_id == current_user.id)
+    )
+    return result.scalars().all()
 
 # ----------------------------
 # Exercises
@@ -90,6 +102,7 @@ async def get_exercises(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    result = await db.execute(select(Exercise).filter(Exercise.user_id == current_user.id))
-    exercises = result.scalars().all()
-    return exercises
+    result = await db.execute(
+        select(Exercise).filter(Exercise.user_id == current_user.id)
+    )
+    return result.scalars().all()
