@@ -3,10 +3,18 @@ from typing import Optional
 from datetime import datetime
 
 # =============================
+# Auth Schemas
+# =============================
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+
+# =============================
 # User Schemas
 # =============================
 class UserBase(BaseModel):
-    username: str
+    name: str
     email: EmailStr
 
 class UserCreate(UserBase):
@@ -22,6 +30,7 @@ class UserOut(UserBase):
 
     model_config = ConfigDict(from_attributes=True)
 
+
 # =============================
 # PomodoroCycle Schemas
 # =============================
@@ -35,9 +44,10 @@ class PomodoroCycleOut(PomodoroCycleBase):
     id: int
     user_id: int
     start_time: datetime
-    end_time: datetime
+    end_time: Optional[datetime] = None
 
     model_config = ConfigDict(from_attributes=True)
+
 
 # =============================
 # Subject Schemas
@@ -55,13 +65,13 @@ class SubjectOut(SubjectBase):
 
     model_config = ConfigDict(from_attributes=True)
 
+
 # =============================
 # Exercise Schemas
 # =============================
 class ExerciseBase(BaseModel):
     question: str
     answer: Optional[str] = None
-    completed: bool = False
     ai_generated: bool = False
 
 class ExerciseCreate(ExerciseBase):
@@ -74,12 +84,13 @@ class ExerciseOut(ExerciseBase):
 
     model_config = ConfigDict(from_attributes=True)
 
+
 # =============================
 # Report Schemas
 # =============================
 class ReportBase(BaseModel):
     type: str  # e.g., "pomodoro", "exercise", etc.
-    data: str  # JSON string ou descrição resumida
+    data: dict  # já como JSON (não string)
 
 class ReportCreate(ReportBase):
     user_id: int
