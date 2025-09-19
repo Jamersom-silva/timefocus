@@ -1,19 +1,25 @@
-const BASE_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000';
+import type { 
+  UserOut, PomodoroCycleOut, PomodoroCycleCreate,
+  SubjectOut, SubjectCreate,
+  ExerciseOut, ExerciseCreate,
+  ReportOut, ReportCreate
+} from "../types/api";
+const BASE_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
 
-async function request(path: string, options: RequestInit = {}) {
-  const token = localStorage.getItem('token'); // pegar token do localStorage
+// Função genérica de request com tipagem de retorno
+async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
+  const token = localStorage.getItem("token");
 
-  // Usando Record<string, string> para headers e depois convertendo para HeadersInit
   const headers: Record<string, string> = {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
     ...(options.headers as Record<string, string>),
   };
 
-  if (token) headers['Authorization'] = `Bearer ${token}`;
+  if (token) headers["Authorization"] = `Bearer ${token}`;
 
   const res = await fetch(`${BASE_URL}${path}`, {
     ...options,
-    headers: headers as HeadersInit, // cast final
+    headers: headers as HeadersInit,
   });
 
   if (!res.ok) {
@@ -21,37 +27,37 @@ async function request(path: string, options: RequestInit = {}) {
     throw error;
   }
 
-  return res.json();
+  return res.json() as Promise<T>;
 }
 
 export const api = {
   // ---------- Auth ----------
   login: (data: { email: string; password: string }) =>
-    request('/auth/login', { method: 'POST', body: JSON.stringify(data) }),
+    request<{ access_token: string; token_type: string }>("/auth/login", { method: "POST", body: JSON.stringify(data) }),
 
   register: (data: { name: string; email: string; password: string }) =>
-    request('/auth/register', { method: 'POST', body: JSON.stringify(data) }),
+    request<UserOut>("/auth/register", { method: "POST", body: JSON.stringify(data) }),
 
   // ---------- User ----------
-  getCurrentUser: () => request('/api/users/me'),
+  getCurrentUser: () => request<UserOut>("/api/users/me"),
 
   // ---------- Pomodoro ----------
-  getPomodoroCycles: () => request('/api/pomodoro'),
-  createPomodoroCycle: (data: { duration: number }) =>
-    request('/api/pomodoro', { method: 'POST', body: JSON.stringify(data) }),
+  getPomodoroCycles: () => request<PomodoroCycleOut[]>("/api/pomodoro"),
+  createPomodoroCycle: (data: PomodoroCycleCreate) =>
+    request<PomodoroCycleOut>("/api/pomodoro", { method: "POST", body: JSON.stringify(data) }),
 
   // ---------- Subjects ----------
-  getSubjects: () => request('/api/subjects'),
-  createSubject: (data: { name: string; description?: string }) =>
-    request('/api/subjects', { method: 'POST', body: JSON.stringify(data) }),
+  getSubjects: () => request<SubjectOut[]>("/api/subjects"),
+  createSubject: (data: SubjectCreate) =>
+    request<SubjectOut>("/api/subjects", { method: "POST", body: JSON.stringify(data) }),
 
   // ---------- Exercises ----------
-  getExercises: () => request('/api/exercises'),
-  createExercise: (data: { subject_id: number; question: string; answer?: string; ai_generated?: boolean }) =>
-    request('/api/exercises', { method: 'POST', body: JSON.stringify(data) }),
+  getExercises: () => request<ExerciseOut[]>("/api/exercises"),
+  createExercise: (data: ExerciseCreate) =>
+    request<ExerciseOut>("/api/exercises", { method: "POST", body: JSON.stringify(data) }),
 
   // ---------- Reports ----------
-  getReports: () => request('/api/reports'),
-  createReport: (data: { type: string; data: string }) =>
-    request('/api/reports', { method: 'POST', body: JSON.stringify(data) }),
+  getReports: () => request<ReportOut[]>("/api/reports"),
+  createReport: (data: ReportCreate) =>
+    request<ReportOut>("/api/reports", { method: "POST", body: JSON.stringify(data) }),
 };
