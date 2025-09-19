@@ -1,5 +1,9 @@
-// src/contexts/UserContextObject.ts
 import { createContext } from "react";
-import type { UserContextType } from "./UserTypes";
+import type { User } from "./UserTypes";
 
-export const UserContext = createContext<UserContextType | undefined>(undefined);
+export type UserContextType = {
+  user: User | null;
+  setUser: (user: User | null) => void;
+};
+
+export const UserContext = createContext<UserContextType | null>(null);

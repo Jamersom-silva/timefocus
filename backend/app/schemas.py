@@ -1,103 +1,102 @@
-from pydantic import BaseModel, EmailStr, ConfigDict
+from pydantic import BaseModel, EmailStr
 from typing import Optional
 from datetime import datetime
 
-# =============================
-# Auth Schemas
-# =============================
-class Token(BaseModel):
-    access_token: str
-    token_type: str
-
-
-# =============================
-# User Schemas
-# =============================
-class UserBase(BaseModel):
-    name: str
+# ----------------------------
+# Usuário
+# ----------------------------
+class UserCreate(BaseModel):
+    name: str           # alterado de username para name
     email: EmailStr
-
-class UserCreate(UserBase):
     password: str
 
 class UserLogin(BaseModel):
     email: EmailStr
     password: str
 
-class UserOut(UserBase):
+class UserOut(BaseModel):
     id: int
+    name: str           # alterado de username para name
+    email: EmailStr
     created_at: datetime
 
-    model_config = ConfigDict(from_attributes=True)
+    class Config:
+        orm_mode = True
 
+# ----------------------------
+# Token JWT
+# ----------------------------
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+    user: UserOut       # inclui o usuário dentro do token
 
-# =============================
-# PomodoroCycle Schemas
-# =============================
-class PomodoroCycleBase(BaseModel):
-    duration: int  # minutos
+# ----------------------------
+# Pomodoro
+# ----------------------------
+class PomodoroCycleCreate(BaseModel):
+    duration: int  # duração em minutos
 
-class PomodoroCycleCreate(PomodoroCycleBase):
-    pass
-
-class PomodoroCycleOut(PomodoroCycleBase):
+class PomodoroCycleOut(BaseModel):
     id: int
     user_id: int
-    start_time: datetime
-    end_time: Optional[datetime] = None
+    duration: int
+    created_at: datetime
 
-    model_config = ConfigDict(from_attributes=True)
+    class Config:
+        orm_mode = True
 
-
-# =============================
-# Subject Schemas
-# =============================
-class SubjectBase(BaseModel):
+# ----------------------------
+# Subjects
+# ----------------------------
+class SubjectCreate(BaseModel):
     name: str
     description: Optional[str] = None
 
-class SubjectCreate(SubjectBase):
-    pass
-
-class SubjectOut(SubjectBase):
+class SubjectOut(BaseModel):
     id: int
     user_id: int
-
-    model_config = ConfigDict(from_attributes=True)
-
-
-# =============================
-# Exercise Schemas
-# =============================
-class ExerciseBase(BaseModel):
-    question: str
-    answer: Optional[str] = None
-    ai_generated: bool = False
-
-class ExerciseCreate(ExerciseBase):
-    subject_id: int
-
-class ExerciseOut(ExerciseBase):
-    id: int
-    user_id: int
-    subject_id: int
-
-    model_config = ConfigDict(from_attributes=True)
-
-
-# =============================
-# Report Schemas
-# =============================
-class ReportBase(BaseModel):
-    type: str  # e.g., "pomodoro", "exercise", etc.
-    data: dict  # já como JSON (não string)
-
-class ReportCreate(ReportBase):
-    user_id: int
-
-class ReportOut(ReportBase):
-    id: int
-    user_id: int
+    name: str
+    description: Optional[str] = None
     created_at: datetime
 
-    model_config = ConfigDict(from_attributes=True)
+    class Config:
+        orm_mode = True
+
+# ----------------------------
+# Exercises
+# ----------------------------
+class ExerciseCreate(BaseModel):
+    subject_id: int
+    question: str
+    answer: Optional[str] = None
+    ai_generated: Optional[bool] = False
+
+class ExerciseOut(BaseModel):
+    id: int
+    user_id: int
+    subject_id: int
+    question: str
+    answer: Optional[str]
+    ai_generated: bool
+    created_at: datetime
+
+    class Config:
+        orm_mode = True
+
+# ----------------------------
+# Reports
+# ----------------------------
+class ReportCreate(BaseModel):
+    type: str
+    data: str
+
+class ReportOut(BaseModel):
+    id: int
+    user_id: int
+    type: str
+    data: str
+    created_at: datetime
+
+    class Config:
+        orm_mode = True

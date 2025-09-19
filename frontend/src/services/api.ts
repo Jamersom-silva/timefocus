@@ -4,9 +4,9 @@ import type {
   ExerciseOut, ExerciseCreate,
   ReportOut, ReportCreate
 } from "../types/api";
+
 const BASE_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
 
-// Função genérica de request com tipagem de retorno
 async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   const token = localStorage.getItem("token");
 
@@ -23,7 +23,7 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   });
 
   if (!res.ok) {
-    const error = await res.json().catch(() => ({ message: res.statusText }));
+    const error: { detail?: string } = await res.json().catch(() => ({ detail: res.statusText }));
     throw error;
   }
 
@@ -35,11 +35,10 @@ export const api = {
   login: (data: { email: string; password: string }) =>
     request<{ access_token: string; token_type: string }>("/auth/login", { method: "POST", body: JSON.stringify(data) }),
 
-  register: (data: { name: string; email: string; password: string }) =>
+  register: (data: { username: string; email: string; password: string }) =>
     request<UserOut>("/auth/register", { method: "POST", body: JSON.stringify(data) }),
 
-  // ---------- User ----------
-  getCurrentUser: () => request<UserOut>("/api/users/me"),
+  getCurrentUser: () => request<UserOut>("/auth/me"),
 
   // ---------- Pomodoro ----------
   getPomodoroCycles: () => request<PomodoroCycleOut[]>("/api/pomodoro"),

@@ -1,11 +1,10 @@
-// src/contexts/UserTypes.ts
 export type User = {
-  id: string;
-  name: string;
+  id: number;
   email: string;
+  username: string; // antes era "name"
 };
 
 export type UserContextType = {
   user: User | null;
-  setUser: (user: User | null) => void;
+  setUser: (user: User) => void;
 };
