@@ -1,13 +1,19 @@
-
 const BASE_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000';
 
-export async function request(path: string, options: RequestInit = {}) {
+async function request(path: string, options: RequestInit = {}) {
+  const token = localStorage.getItem('token'); // pegar token do localStorage
+
+  // Usando Record<string, string> para headers e depois convertendo para HeadersInit
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+    ...(options.headers as Record<string, string>),
+  };
+
+  if (token) headers['Authorization'] = `Bearer ${token}`;
+
   const res = await fetch(`${BASE_URL}${path}`, {
-    headers: {
-      'Content-Type': 'application/json',
-      ...options.headers,
-    },
     ...options,
+    headers: headers as HeadersInit, // cast final
   });
 
   if (!res.ok) {
@@ -18,16 +24,34 @@ export async function request(path: string, options: RequestInit = {}) {
   return res.json();
 }
 
-// Exemplo de funções específicas
 export const api = {
+  // ---------- Auth ----------
   login: (data: { email: string; password: string }) =>
     request('/auth/login', { method: 'POST', body: JSON.stringify(data) }),
 
   register: (data: { name: string; email: string; password: string }) =>
     request('/auth/register', { method: 'POST', body: JSON.stringify(data) }),
 
-  getUser: () => request('/users/me'),
+  // ---------- User ----------
+  getCurrentUser: () => request('/api/users/me'),
 
-  // Funções para Pomodoro, Subjects, Reports etc
-  getPomodoroCycles: () => request('/pomodoro'),
+  // ---------- Pomodoro ----------
+  getPomodoroCycles: () => request('/api/pomodoro'),
+  createPomodoroCycle: (data: { duration: number }) =>
+    request('/api/pomodoro', { method: 'POST', body: JSON.stringify(data) }),
+
+  // ---------- Subjects ----------
+  getSubjects: () => request('/api/subjects'),
+  createSubject: (data: { name: string; description?: string }) =>
+    request('/api/subjects', { method: 'POST', body: JSON.stringify(data) }),
+
+  // ---------- Exercises ----------
+  getExercises: () => request('/api/exercises'),
+  createExercise: (data: { subject_id: number; question: string; answer?: string; ai_generated?: boolean }) =>
+    request('/api/exercises', { method: 'POST', body: JSON.stringify(data) }),
+
+  // ---------- Reports ----------
+  getReports: () => request('/api/reports'),
+  createReport: (data: { type: string; data: string }) =>
+    request('/api/reports', { method: 'POST', body: JSON.stringify(data) }),
 };
