@@ -70,7 +70,7 @@ export default function RegisterPage() {
             onChange={(e) => setUsername(e.target.value)}
           />
           <Input
-            label="E-mail"
+            label="E-mai"
             type="email"
             placeholder="seu@email.com"
             value={email}
