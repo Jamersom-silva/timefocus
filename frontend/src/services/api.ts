@@ -1,3 +1,4 @@
+// frontend/src/services/api.ts
 import type { 
   UserOut, PomodoroCycleOut, PomodoroCycleCreate,
   SubjectOut, SubjectCreate,
@@ -7,6 +8,7 @@ import type {
 
 const BASE_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
 
+// Função genérica para fazer requests
 async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   const token = localStorage.getItem("token");
 
@@ -33,10 +35,16 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
 export const api = {
   // ---------- Auth ----------
   login: (data: { email: string; password: string }) =>
-    request<{ access_token: string; token_type: string }>("/auth/login", { method: "POST", body: JSON.stringify(data) }),
+    request<{ access_token: string; token_type: string; user: UserOut }>("/auth/login", {
+      method: "POST",
+      body: JSON.stringify(data),
+    }),
 
   register: (data: { username: string; email: string; password: string }) =>
-    request<UserOut>("/auth/register", { method: "POST", body: JSON.stringify(data) }),
+    request<{ access_token: string; token_type: string; user: UserOut }>("/auth/register", {
+      method: "POST",
+      body: JSON.stringify(data),
+    }),
 
   getCurrentUser: () => request<UserOut>("/auth/me"),
 
