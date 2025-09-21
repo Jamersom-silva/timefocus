@@ -15,7 +15,7 @@ export default function Header() {
 
 
             {/* Botões de navegação */}
-            <nav className="flex gap-2">
+            <nav className="flex gap-2 ">
                 <button onClick={() => navigate("/login")}>Login</button>
                 <button onClick={() => navigate("/register")}>Registro</button>
                 <button onClick={() => navigate("/dashboard")}>Dashboard</button>
