@@ -1,11 +1,10 @@
-// frontend/src/pages/Subjects/Subjects.tsx
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useCallback, useContext } from "react";
 import Header from "../../components/Header/Header";
 import Input from "../../components/Input/Input";
 import Button from "../../components/Button/Button";
-import { api } from "../../services/api";
 import { UserContext } from "../../contexts/UserContext";
-import type { SubjectOut, SubjectCreate } from "../../types/api";
+import { api } from "../../services/api";
+import type { SubjectOut } from "../../types/api";
 
 export default function SubjectsPage() {
   const { user } = useContext(UserContext)!;
@@ -13,85 +12,71 @@ export default function SubjectsPage() {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
 
-  // Buscar assuntos do usuário
-  const fetchSubjects = async () => {
+  const fetchSubjects = useCallback(async () => {
     try {
       const data = await api.getSubjects();
       setSubjects(data);
-    } catch (err: any) {
-      setError(err.detail || "Erro ao buscar assuntos");
+    } catch (err) {
+      console.error("Erro ao buscar subjects:", err);
+    }
+  }, []);
+
+  const addSubject = async () => {
+    if (!name) return;
+    setLoading(true);
+    try {
+      await api.createSubject({ name, description });
+      setName("");
+      setDescription("");
+      fetchSubjects();
+    } catch (err) {
+      console.error("Erro ao criar subject:", err);
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
     fetchSubjects();
-  }, []);
-
-  // Criar novo assunto
-  const addSubject = async () => {
-    if (!name) {
-      setError("O nome do assunto é obrigatório");
-      return;
-    }
-
-    setLoading(true);
-    setError("");
-    const newSubject: SubjectCreate = { name, description };
-
-    try {
-      const created = await api.createSubject(newSubject);
-      setSubjects((prev) => [created, ...prev]);
-      setName("");
-      setDescription("");
-    } catch (err: any) {
-      setError(err.detail || "Erro ao criar assunto");
-    } finally {
-      setLoading(false);
-    }
-  };
+  }, [fetchSubjects]);
 
   return (
     <div className="home-page min-h-screen flex flex-col">
       <Header />
 
       <main className="flex-1 p-6 bg-gray-50 flex flex-col items-center">
-        <h1 className="text-3xl font-bold mb-4">Assuntos</h1>
+        {user && <p className="mb-4 text-lg font-medium">Olá, {user.username}!</p>}
 
-        <div className="bg-white shadow rounded-lg p-6 w-full max-w-md flex flex-col gap-4 mb-6">
+        <h1 className="text-3xl font-bold mb-4">Subjects</h1>
+
+        <div className="mb-6 w-full max-w-md flex flex-col gap-2">
           <Input
-            label="Nome do Assunto"
-            type="text"
-            placeholder="Ex.: Matemática"
+            label="Nome do Subject"
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
           <Input
             label="Descrição (opcional)"
-            type="text"
-            placeholder="Breve descrição"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
           />
-
-          {error && <p className="text-red-500">{error}</p>}
-
-          <Button variant="primary" size="lg" disabled={loading} onClick={addSubject}>
-            {loading ? "Adicionando..." : "Adicionar Assunto"}
+          <Button variant="primary" onClick={addSubject} disabled={loading}>
+            {loading ? "Salvando..." : "Adicionar Subject"}
           </Button>
         </div>
 
-        <h2 className="text-2xl font-semibold mb-2">Lista de Assuntos</h2>
-        <ul className="w-full max-w-md flex flex-col gap-2">
-          {subjects.map((subj) => (
-            <li key={subj.id} className="bg-white shadow p-3 rounded flex flex-col">
-              <span className="font-semibold">{subj.name}</span>
-              {subj.description && <span className="text-gray-600 text-sm">{subj.description}</span>}
-            </li>
-          ))}
-          {subjects.length === 0 && <li className="text-gray-500">Nenhum assunto cadastrado ainda.</li>}
-        </ul>
+        <div className="w-full max-w-md">
+          <h2 className="text-xl font-semibold mb-2">Lista de Subjects</h2>
+          <ul>
+            {subjects.map((subject) => (
+              <li key={subject.id} className="mb-1 border-b pb-1">
+                <strong>{subject.name}</strong>
+                {subject.description && ` - ${subject.description}`}
+              </li>
+            ))}
+          </ul>
+        </div>
       </main>
     </div>
   );
