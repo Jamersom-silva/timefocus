@@ -11,8 +11,8 @@ export interface PomodoroCycleOut {
   id: number;
   user_id: number;
   duration: number;
-  start_time: string;
-  end_time: string | null;
+  start_time: string; // início do ciclo
+  end_time: string | null; // fim do ciclo (pode ser null se estiver em andamento)
 }
 
 export interface PomodoroCycleCreate {

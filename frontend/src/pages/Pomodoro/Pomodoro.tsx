@@ -1,46 +1,74 @@
-// frontend/src/pages/Pomodoro/Pomodoro.tsx
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useCallback } from "react";
 import Header from "../../components/Header/Header";
 import Button from "../../components/Button/Button";
-import { api } from "../../services/api";
 import { UserContext } from "../../contexts/UserContext";
-import type { PomodoroCycleOut, PomodoroCycleCreate } from "../../types/api";
+import { api } from "../../services/api";
+import type { PomodoroCycleOut } from "../../types/api";
 
 export default function PomodoroPage() {
-  const { user } = useContext(UserContext)!;
+  const { user } = useContext(UserContext)!; // agora será usado
   const [cycles, setCycles] = useState<PomodoroCycleOut[]>([]);
-  const [duration, setDuration] = useState(25); // duração padrão em minutos
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [activeCycle, setActiveCycle] = useState<PomodoroCycleOut | null>(null);
+  const [secondsLeft, setSecondsLeft] = useState<number>(0);
 
-  // Buscar ciclos do usuário
-  const fetchCycles = async () => {
+  // Função para buscar ciclos
+  const fetchCycles = useCallback(async () => {
     try {
       const data = await api.getPomodoroCycles();
       setCycles(data);
-    } catch (err: any) {
-      setError(err.detail || "Erro ao buscar ciclos");
+    } catch (err) {
+      console.error("Erro ao buscar ciclos:", err);
     }
-  };
-
-  useEffect(() => {
-    fetchCycles();
   }, []);
 
-  // Criar novo ciclo
-  const startCycle = async () => {
-    setLoading(true);
-    setError("");
-    const newCycle: PomodoroCycleCreate = { duration };
-
+  // Função para salvar ciclo
+  const saveCycle = useCallback(async (cycle: PomodoroCycleOut) => {
     try {
-      const created = await api.createPomodoroCycle(newCycle);
-      setCycles((prev) => [created, ...prev]);
-    } catch (err: any) {
-      setError(err.detail || "Erro ao iniciar ciclo");
-    } finally {
-      setLoading(false);
+      await api.createPomodoroCycle({ duration: cycle.duration });
+      fetchCycles();
+    } catch (err) {
+      console.error("Erro ao salvar ciclo:", err);
     }
+  }, [fetchCycles]);
+
+  // Carregar ciclos ao montar
+  useEffect(() => {
+    fetchCycles();
+  }, [fetchCycles]);
+
+  // Contador
+  useEffect(() => {
+    if (!activeCycle) return;
+
+    const interval = setInterval(() => {
+      setSecondsLeft((prev) => {
+        if (prev <= 1) {
+          clearInterval(interval);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [activeCycle]);
+
+  const startCycle = (duration: number) => {
+    const newCycle = { id: Date.now(), user_id: user?.id || 0, duration, start_time: new Date().toISOString(), end_time: null };
+    setActiveCycle(newCycle);
+    setSecondsLeft(duration * 60);
+    saveCycle(newCycle);
+  };
+
+  const stopCycle = () => {
+    setActiveCycle(null);
+    setSecondsLeft(0);
+  };
+
+  const formatTime = (totalSeconds: number) => {
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+    return `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
   };
 
   return (
@@ -48,34 +76,26 @@ export default function PomodoroPage() {
       <Header />
 
       <main className="flex-1 p-6 bg-gray-50 flex flex-col items-center">
-        <h1 className="text-3xl font-bold mb-4">Pomodoro</h1>
+        {user && <p className="mb-4 text-lg font-medium">Olá, {user.username}!</p>}
 
-        <div className="flex gap-2 mb-4">
-          <input
-            type="number"
-            value={duration}
-            onChange={(e) => setDuration(Number(e.target.value))}
-            className="border rounded p-2 w-20 text-center"
-          />
-          <span>minutos</span>
+        <h1 className="text-3xl font-bold mb-2">Pomodoro</h1>
+        <div className="text-2xl font-mono mb-4">{formatTime(secondsLeft)}</div>
+
+        <div className="flex gap-4">
+          <Button variant="primary" onClick={() => startCycle(25)}>Iniciar 25 min</Button>
+          <Button variant="secondary" onClick={stopCycle}>Parar</Button>
         </div>
 
-        <Button variant="primary" size="lg" disabled={loading} onClick={startCycle}>
-          {loading ? "Iniciando..." : "Iniciar Ciclo"}
-        </Button>
-
-        {error && <p className="text-red-500 mt-2">{error}</p>}
-
-        <h2 className="text-2xl font-semibold mt-6 mb-2">Histórico de Ciclos</h2>
-        <ul className="w-full max-w-md flex flex-col gap-2">
-          {cycles.map((cycle) => (
-            <li key={cycle.id} className="bg-white shadow p-3 rounded flex justify-between">
-              <span>Duração: {cycle.duration} min</span>
-              <span>{new Date(cycle.created_at).toLocaleString()}</span>
-            </li>
-          ))}
-          {cycles.length === 0 && <li className="text-gray-500">Nenhum ciclo registrado ainda.</li>}
-        </ul>
+        <div className="mt-6 w-full max-w-md">
+          <h2 className="text-xl font-semibold mb-2">Histórico de Ciclos</h2>
+          <ul>
+            {cycles.map((cycle) => (
+              <li key={cycle.id} className="mb-1">
+                Duração: {cycle.duration} min - Início: {new Date(cycle.start_time).toLocaleString()}
+              </li>
+            ))}
+          </ul>
+        </div>
       </main>
     </div>
   );

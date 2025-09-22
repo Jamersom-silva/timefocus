@@ -1,26 +1,20 @@
 import React from "react";
 
-export interface ButtonProps {
+export type ButtonProps = {
+  variant?: "primary" | "secondary" | "outline";
+  onClick?: () => void;
   children: React.ReactNode;
-  variant?: "primary" | "secondary";
-  size?: "sm" | "md" | "lg";
   disabled?: boolean;
-  type?: "button" | "submit" | "reset"; // corrigido
-}
+};
 
-export default function Button({
-  children,
-  variant = "primary",
-  size = "md",
-  disabled = false,
-  type = "button",
-}: ButtonProps) {
+export default function Button({ variant = "primary", onClick, children, disabled }: ButtonProps) {
+  let style = "px-4 py-2 rounded font-bold ";
+  if (variant === "primary") style += "bg-blue-500 text-white";
+  else if (variant === "secondary") style += "bg-gray-500 text-white";
+  else if (variant === "outline") style += "border border-blue-500 text-blue-500";
+
   return (
-    <button
-      type={type}
-      disabled={disabled}
-      className={`btn-${variant} btn-${size} disabled:opacity-50`}
-    >
+    <button onClick={onClick} disabled={disabled} className={style}>
       {children}
     </button>
   );
