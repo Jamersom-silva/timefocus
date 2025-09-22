@@ -1,10 +1,4 @@
 import Header from "../../components/Header/Header";
-//import Footer from "../../components/Footer/Footer";//
-// import heroImage from "../../assets/hero.png"; // Imagem da seção Hero (adicione depois)
-// import pomodoroIcon from "../../assets/pomodoro.png"; // Ícone do Pomodoro
-// import reportsIcon from "../../assets/reports.png"; // Ícone de Relatórios
-// import aiIcon from "../../assets/ai.png"; // Ícone de Exercícios IA
-// import gamificationIcon from "../../assets/gamification.png"; // Ícone de Gamificação
 
 export default function HomePage() {
   return (
@@ -25,57 +19,86 @@ export default function HomePage() {
           </button>
         </div>
         <div className="hero-image md:w-1/2">
-          {/* Coloque a imagem da hero aqui quando tiver */}
-          {/* <img src={heroImage} alt="TimeFocus Hero" className="w-full max-w-md mx-auto" /> */}
+          <div className="w-full h-64 bg-gray-200 rounded-lg flex items-center justify-center">
+            📸 Imagem Hero
+          </div>
         </div>
       </section>
 
-      {/* Funcionalidades */}
-      <section className="features grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 py-16 px-6 bg-white">
-        <div className="card p-6 shadow-md rounded-lg flex flex-col items-center">
-          {/* Coloque o ícone do Pomodoro aqui */}
-          {/* <img src={pomodoroIcon} alt="Pomodoro" className="w-16 h-16 mb-4" /> */}
-          <h2 className="text-xl font-semibold">⏱️ Pomodoro Timer</h2>
-          <p className="text-gray-600 text-center mt-2">
-            Mantenha o foco com ciclos de estudo e pausas inteligentes.
+      {/* Funcionalidade detalhada 1 */}
+      <section className="flex flex-col md:flex-row items-center py-20 px-6 bg-white">
+        <div className="md:w-1/2">
+          <h2 className="text-3xl font-bold text-gray-800">⏱️ Foque com o Pomodoro</h2>
+          <p className="mt-4 text-lg text-gray-600">
+            Estude em ciclos de 25 minutos com pausas automáticas. 
+            Acompanhe seu progresso em tempo real e mantenha o foco.
           </p>
         </div>
-        <div className="card p-6 shadow-md rounded-lg flex flex-col items-center">
-          {/* Coloque o ícone de Relatórios aqui */}
-          {/* <img src={reportsIcon} alt="Relatórios" className="w-16 h-16 mb-4" /> */}
-          <h2 className="text-xl font-semibold">📊 Relatórios</h2>
-          <p className="text-gray-600 text-center mt-2">
-            Acompanhe sua produtividade diária, semanal e mensal.
+        <div className="md:w-1/2 flex justify-center mt-8 md:mt-0">
+          <div className="w-80 h-56 bg-gray-100 rounded-lg flex items-center justify-center">
+            📸 Mockup Pomodoro
+          </div>
+        </div>
+      </section>
+
+      {/* Funcionalidade detalhada 2 */}
+      <section className="flex flex-col md:flex-row-reverse items-center py-20 px-6 bg-gray-50">
+        <div className="md:w-1/2">
+          <h2 className="text-3xl font-bold text-gray-800">📊 Relatórios Inteligentes</h2>
+          <p className="mt-4 text-lg text-gray-600">
+            Veja sua produtividade em relatórios diários, semanais e mensais. 
+            Descubra onde pode melhorar.
           </p>
         </div>
-        <div className="card p-6 shadow-md rounded-lg flex flex-col items-center">
-          {/* Coloque o ícone de Exercícios IA aqui */}
-          {/* <img src={aiIcon} alt="Exercícios IA" className="w-16 h-16 mb-4" /> */}
-          <h2 className="text-xl font-semibold">🤖 Exercícios IA</h2>
-          <p className="text-gray-600 text-center mt-2">
-            Geração de exercícios personalizados com inteligência artificial.
+        <div className="md:w-1/2 flex justify-center mt-8 md:mt-0">
+          <div className="w-80 h-56 bg-gray-100 rounded-lg flex items-center justify-center">
+            📸 Mockup Relatórios
+          </div>
+        </div>
+      </section>
+
+      {/* Funcionalidade detalhada 3 */}
+      <section className="flex flex-col md:flex-row items-center py-20 px-6 bg-white">
+        <div className="md:w-1/2">
+          <h2 className="text-3xl font-bold text-gray-800">🤖 Exercícios com IA</h2>
+          <p className="mt-4 text-lg text-gray-600">
+            Gere automaticamente exercícios personalizados 
+            com base no conteúdo que está estudando.
           </p>
         </div>
-        <div className="card p-6 shadow-md rounded-lg flex flex-col items-center">
-          {/* Coloque o ícone de Gamificação aqui */}
-          {/* <img src={gamificationIcon} alt="Gamificação" className="w-16 h-16 mb-4" /> */}
-          <h2 className="text-xl font-semibold">🏆 Gamificação</h2>
-          <p className="text-gray-600 text-center mt-2">
-            Pontos, conquistas e ranking para motivar seus estudos.
+        <div className="md:w-1/2 flex justify-center mt-8 md:mt-0">
+          <div className="w-80 h-56 bg-gray-100 rounded-lg flex items-center justify-center">
+            📸 Mockup Exercícios IA
+          </div>
+        </div>
+      </section>
+
+      {/* Funcionalidade detalhada 4 */}
+      <section className="flex flex-col md:flex-row-reverse items-center py-20 px-6 bg-gray-50">
+        <div className="md:w-1/2">
+          <h2 className="text-3xl font-bold text-gray-800">🏆 Gamificação</h2>
+          <p className="mt-4 text-lg text-gray-600">
+            Ganhe pontos, conquistas e veja seu ranking. 
+            Transforme seus estudos em uma jornada motivadora.
           </p>
+        </div>
+        <div className="md:w-1/2 flex justify-center mt-8 md:mt-0">
+          <div className="w-80 h-56 bg-gray-100 rounded-lg flex items-center justify-center">
+            📸 Mockup Gamificação
+          </div>
         </div>
       </section>
 
       {/* Call to Action Final */}
       <section className="cta text-center py-20 bg-blue-600 text-white">
         <h2 className="text-3xl font-bold">Estude melhor e mais focado</h2>
-        <p className="mt-2 text-lg">Cadastre-se grátis e comece sua jornada com TimeFocus</p>
+        <p className="mt-2 text-lg">
+          Cadastre-se grátis e comece sua jornada com TimeFocus
+        </p>
         <button className="mt-6 px-6 py-3 bg-white text-blue-600 rounded-lg text-lg hover:bg-gray-200">
           Criar Conta
         </button>
       </section>
-
-      
     </div>
   );
 }
