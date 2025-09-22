@@ -8,7 +8,7 @@ import type {
 
 const BASE_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
 
-// Função genérica para fazer requests
+// Função genérica para requisições
 async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   const token = localStorage.getItem("token");
 
@@ -35,13 +35,13 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
 export const api = {
   // ---------- Auth ----------
   login: (data: { email: string; password: string }) =>
-    request<{ access_token: string; token_type: string; user: UserOut }>("/auth/login", {
+    request<{ access_token: string; token_type: string; user?: UserOut }>("/auth/login", {
       method: "POST",
       body: JSON.stringify(data),
     }),
 
   register: (data: { username: string; email: string; password: string }) =>
-    request<{ access_token: string; token_type: string; user: UserOut }>("/auth/register", {
+    request<{ access_token: string; token_type: string; user?: UserOut }>("/auth/register", {
       method: "POST",
       body: JSON.stringify(data),
     }),
@@ -51,20 +51,37 @@ export const api = {
   // ---------- Pomodoro ----------
   getPomodoroCycles: () => request<PomodoroCycleOut[]>("/api/pomodoro"),
   createPomodoroCycle: (data: PomodoroCycleCreate) =>
-    request<PomodoroCycleOut>("/api/pomodoro", { method: "POST", body: JSON.stringify(data) }),
+    request<PomodoroCycleOut>("/api/pomodoro", { 
+      method: "POST", 
+      body: JSON.stringify(data) 
+    }),
 
   // ---------- Subjects ----------
   getSubjects: () => request<SubjectOut[]>("/api/subjects"),
   createSubject: (data: SubjectCreate) =>
-    request<SubjectOut>("/api/subjects", { method: "POST", body: JSON.stringify(data) }),
+    request<SubjectOut>("/api/subjects", { 
+      method: "POST", 
+      body: JSON.stringify(data) 
+    }),
 
   // ---------- Exercises ----------
   getExercises: () => request<ExerciseOut[]>("/api/exercises"),
   createExercise: (data: ExerciseCreate) =>
-    request<ExerciseOut>("/api/exercises", { method: "POST", body: JSON.stringify(data) }),
+    request<ExerciseOut>("/api/exercises", { 
+      method: "POST", 
+      body: JSON.stringify(data) 
+    }),
+  updateExercise: (id: number, data: Partial<Pick<ExerciseOut, "completed" | "answer">>) =>
+    request<ExerciseOut>(`/api/exercises/${id}`, { 
+      method: "PATCH", 
+      body: JSON.stringify(data) 
+    }),
 
   // ---------- Reports ----------
   getReports: () => request<ReportOut[]>("/api/reports"),
   createReport: (data: ReportCreate) =>
-    request<ReportOut>("/api/reports", { method: "POST", body: JSON.stringify(data) }),
+    request<ReportOut>("/api/reports", { 
+      method: "POST", 
+      body: JSON.stringify(data) 
+    }),
 };
