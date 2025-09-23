@@ -1,4 +1,4 @@
-import Header from "../../components/Header";
+import Header from "../";
 import FeatureSection from "../../components/FeatureSection";
 import CTASection from "../../components/CTASection";
 import { Button } from "@/components/ui/button";

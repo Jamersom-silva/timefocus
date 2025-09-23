@@ -1,7 +1,7 @@
 // frontend/src/pages/Exercises/Exercises.tsx
 import { useEffect, useState } from "react";
-import { api } from "../../services/api";
-import type { ExerciseOut, ExerciseCreate, SubjectOut } from "../../types/api";
+import { api } from "../services/api";
+import type { ExerciseOut, ExerciseCreate, SubjectOut } from "../types/api";
 
 export default function ExercisesPage() {
   const [exercises, setExercises] = useState<ExerciseOut[]>([]);
