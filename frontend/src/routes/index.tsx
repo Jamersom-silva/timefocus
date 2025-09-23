@@ -1,13 +1,13 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import LoginPage from '../pages//Login';
-import RegisterPage from '../pages//Register';
-import DashboardPage from '../pages//Dashboard';
-import SubjectsPage from '../pages//Subjects';
-import ReportsPage from '../pages//Reports';
-import PomodoroPage from '../pages//Pomodoro';
-import ExercisesPage from '../pages//Exercises';
-import HomePage from '../pages//Home';
-import ProfilePage from '../pages//ProfilePage';
+import LoginPage from '../pages/Login';
+import RegisterPage from '../pages/Register';
+import DashboardPage from '../pages/Dashboard';
+import SubjectsPage from '../pages/Subjects';
+import ReportsPage from '../pages/Reports';
+import PomodoroPage from '../pages/Pomodoro';
+import ExercisesPage from '../pages/Exercises';
+import HomePage from '../pages/Home';
+import ProfilePage from '../pages/ProfilePage';
 
 export function AppRoutes() {
   return (

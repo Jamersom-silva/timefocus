@@ -1,7 +1,7 @@
 import Header from "../components/Header";
 import FeatureSection from "../components/FeatureSection";
 import CTASection from "../components/CTASection";
-import { Button } from "../components/ui/button";
+import { Button } from "../components/ui/Button";
 
 export default function HomePage() {
   return (
