@@ -1,11 +1,11 @@
 import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import Header from "../../components/Header";
-import Input from "../../components/Input";
-import Button from "../../components/Button";
-import { UserContext } from "../../contexts/UserContext";
-import type { User } from "../../contexts/UserTypes";
-import { api } from "../../services/api"; // CORRIGIDO
+import Header from "../components/Header";
+import Input from "../components/Input";
+import { Button } from "../components/ui/Button";
+import { UserContext } from "../contexts/UserContext";
+import type { User } from "../contexts/UserTypes";
+import { api } from "../services/api"; // CORRIGIDO
 
 export default function RegisterPage() {
   const navigate = useNavigate();

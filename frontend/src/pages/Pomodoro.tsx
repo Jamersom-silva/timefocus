@@ -1,9 +1,9 @@
 import { useState, useEffect, useContext, useCallback } from "react";
-import Header from "../../components/Header";
-import Button from "../../components/Button";
-import { UserContext } from "../../contexts/UserContext";
-import { api } from "../../services/api";
-import type { PomodoroCycleOut } from "../../types/api";
+import Header from "../components/Header";
+import { Button } from "../components/ui/Button";
+import { UserContext } from "../contexts/UserContext";
+import { api } from "../services/api";
+import type { PomodoroCycleOut } from "../types/api";
 
 export default function PomodoroPage() {
   const { user } = useContext(UserContext)!; // agora será usado
