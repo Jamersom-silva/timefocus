@@ -103,7 +103,7 @@ export default function RegisterPage() {
                 onClick={() => navigate("/login")}
                 className="hover:underline"
               >
-                
+                Já tenho conta
               </button>
             </div>
           </form>
