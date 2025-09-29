@@ -69,23 +69,24 @@ export default function HomePage() {
             </div>
 
             {/* Hero Image */}
-            <div className="md:w-1/2 flex justify-center">
-              <div className="relative">
-                <div className="w-full max-w-lg h-80 bg-gradient-to-br from-white to-gray-50 rounded-3xl shadow-2xl border border-gray-200 flex items-center justify-center transform hover:scale-105 transition-transform duration-300">
-                  <div className="text-center">
-                    <div className="text-8xl mb-4">⏱️</div>
-                    <p className="text-gray-600 font-medium text-lg">Interface TimeFocus</p>
-                  </div>
-                </div>
-                {/* Floating elements */}
-                <div className="absolute -top-6 -right-6 w-12 h-12 bg-blue-500 rounded-2xl flex items-center justify-center text-white text-xl shadow-lg">
-                  📊
-                </div>
-                <div className="absolute -bottom-6 -left-6 w-12 h-12 bg-indigo-500 rounded-2xl flex items-center justify-center text-white text-xl shadow-lg">
-                  🎯
-                </div>
-              </div>
-            </div>
+<div className="md:w-1/2 flex justify-center">
+  <div className="relative">
+    <img
+      src="/img/TimesFocusLetra.png"
+      alt="Logo TimeFocus"
+      className="w-full max-w-lg h-80 object-contain transform hover:scale-105 transition-transform duration-300"
+    />
+
+    {/* Floating elements */}
+    <div className="absolute -top-6 -right-6 w-12 h-12 rounded-2xl flex items-center justify-center">
+      
+    </div>
+    <div className="absolute -bottom-6 -left-6 w-12 h-12 rounded-2xl flex items-center justify-center">
+      
+    </div>
+  </div>
+</div>
+
           </div>
         </div>
       </section>
