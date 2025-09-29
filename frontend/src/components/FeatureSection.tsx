@@ -26,10 +26,10 @@ export default function FeatureSection({
             </div>
             <p className="text-lg text-gray-600 leading-relaxed">{description}</p>
             <div className="flex gap-4">
-              <button className="px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl">
+              <button className="px-6 py-3 bg-emerald-500 text-white rounded-lg font-medium hover:bg-emerald-500 transition-colors shadow-lg hover:shadow-xl">
                 Experimentar
               </button>
-              <button className="px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-lg font-medium hover:border-blue-600 hover:text-blue-600 transition-colors">
+              <button className="px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-lg font-medium hover:border-emerald-500 hover:text-emerald-500 transition-colors">
                 Saiba mais
               </button>
             </div>
