@@ -1,7 +1,7 @@
 import Header from "../components/Header";
 import FeatureSection from "../components/FeatureSection";
 import CTASection from "../components/CTASection";
-import { Button } from "../components/ui/Button";
+import { Button } from "@/components/ui/Button";
 
 export default function HomePage() {
   return (
@@ -9,11 +9,11 @@ export default function HomePage() {
       <Header />
 
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 py-20 px-6 overflow-hidden">
+      <section className="relative bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 py-20 px-6 overflow-hidden">
         {/* Background decorations */}
         <div className="absolute inset-0">
-          <div className="absolute top-20 left-10 w-64 h-64 bg-blue-200 rounded-full opacity-20 blur-3xl"></div>
-          <div className="absolute bottom-20 right-10 w-80 h-80 bg-indigo-200 rounded-full opacity-20 blur-3xl"></div>
+          <div className="absolute top-20 left-10 w-64 h-64 bg-emerald-200 rounded-full opacity-20 blur-3xl"></div>
+          <div className="absolute bottom-20 right-10 w-80 h-80 bg-teal-200 rounded-full opacity-20 blur-3xl"></div>
         </div>
 
         <div className="max-w-7xl mx-auto relative z-10">
@@ -21,12 +21,12 @@ export default function HomePage() {
             {/* Hero Text */}
             <div className="md:w-1/2 text-center md:text-left space-y-8">
               <div className="space-y-4">
-                <div className="inline-flex items-center px-4 py-2 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">
+                <div className="inline-flex items-center px-4 py-2 bg-emerald-100 text-emerald-800 rounded-full text-sm font-medium">
                   🚀 Novo: Exercícios com IA disponíveis!
                 </div>
                 <h1 className="text-4xl md:text-6xl font-bold text-gray-900 leading-tight">
                   Organize seus estudos com{" "}
-                  <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                  <span className="bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
                     TimeFocus
                   </span>
                 </h1>
@@ -39,14 +39,14 @@ export default function HomePage() {
               <div className="flex flex-col sm:flex-row gap-4">
                 <Button 
                   size="lg" 
-                  className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-4 text-lg shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-200"
+                  className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-semibold px-8 py-4 text-lg shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-200"
                 >
                   Começar Grátis
                 </Button>
                 <Button 
                   variant="outline" 
                   size="lg"
-                  className="border-2 border-gray-300 text-gray-700 hover:border-blue-600 hover:text-blue-600 font-semibold px-8 py-4 text-lg"
+                  className="border-2 border-gray-300 text-gray-700 hover:border-emerald-500 hover:text-emerald-600 font-semibold px-8 py-4 text-lg"
                 >
                   Ver Como Funciona
                 </Button>
@@ -69,23 +69,23 @@ export default function HomePage() {
             </div>
 
             {/* Hero Image */}
-<div className="md:w-1/2 flex justify-center">
-  <div className="relative">
-    <img
-      src="/img/TimesFocusLetra.png"
-      alt="Logo TimeFocus"
-      className="w-full max-w-lg h-80 object-contain transform hover:scale-105 transition-transform duration-300"
-    />
+            <div className="md:w-1/2 flex justify-center">
+              <div className="relative">
+                <img
+                  src="/img/Logo_TimeFocus_transparente.png"
+                  alt="Logo TimeFocus"
+                  className="w-full max-w-lg h-100 object-contain transform hover:scale-105 transition-transform duration-300"
+                />
 
-    {/* Floating elements */}
-    <div className="absolute -top-6 -right-6 w-12 h-12 rounded-2xl flex items-center justify-center">
-      
-    </div>
-    <div className="absolute -bottom-6 -left-6 w-12 h-12 rounded-2xl flex items-center justify-center">
-      
-    </div>
-  </div>
-</div>
+                {/* Floating elements */}
+                <div className="absolute -top-6 -right-6 w-12 h-12 bg-emerald-500 rounded-2xl flex items-center justify-center text-white text-xl shadow-lg">
+                  📊
+                </div>
+                <div className="absolute -bottom-6 -left-6 w-12 h-12 bg-teal-500 rounded-2xl flex items-center justify-center text-white text-xl shadow-lg">
+                  🎯
+                </div>
+              </div>
+            </div>
 
           </div>
         </div>
@@ -142,19 +142,19 @@ export default function HomePage() {
 
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div className="text-center">
-              <div className="text-4xl font-bold text-blue-600 mb-2">50k+</div>
+              <div className="text-4xl font-bold text-emerald-600 mb-2">50k+</div>
               <p className="text-gray-600">Estudantes ativos</p>
             </div>
             <div className="text-center">
-              <div className="text-4xl font-bold text-blue-600 mb-2">2M+</div>
+              <div className="text-4xl font-bold text-emerald-600 mb-2">2M+</div>
               <p className="text-gray-600">Horas de estudo</p>
             </div>
             <div className="text-center">
-              <div className="text-4xl font-bold text-blue-600 mb-2">85%</div>
+              <div className="text-4xl font-bold text-emerald-600 mb-2">85%</div>
               <p className="text-gray-600">Melhoria na produtividade</p>
             </div>
             <div className="text-center">
-              <div className="text-4xl font-bold text-blue-600 mb-2">4.9★</div>
+              <div className="text-4xl font-bold text-emerald-600 mb-2">4.9★</div>
               <p className="text-gray-600">Avaliação dos usuários</p>
             </div>
           </div>
@@ -169,7 +169,7 @@ export default function HomePage() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div className="space-y-4">
               <div className="flex items-center">
-                <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center mr-3">
+                <div className="w-8 h-8 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-lg flex items-center justify-center mr-3">
                   <span className="text-white font-bold text-lg">T</span>
                 </div>
                 <span className="text-xl font-bold">TimeFocus</span>

@@ -32,11 +32,11 @@ export default function LoginForm() {
         className="border p-2 rounded"
       />
 
-      <button type="submit" className="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600">
+      <button type="submit" className="bg-emerald-500 text-white py-2 px-4 rounded hover:bg-emerald-500">
         Entrar
       </button>
 
-      <a href="/register" className="text-blue-500 text-sm hover:underline">
+      <a href="/register" className="text-emerald-500 text-sm hover:underline">
         Não tem conta? Cadastre-se
       </a>
     </form>
