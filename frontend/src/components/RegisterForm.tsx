@@ -29,7 +29,7 @@ export default function RegisterForm() {
       <input name="email" type="email" placeholder="E-mail" onChange={handleChange} className="border p-2 rounded" />
       <input name="senha" type="password" placeholder="Senha" onChange={handleChange} className="border p-2 rounded" />
 
-      <button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">
+      <button type="submit" className="bg-emerald-500 text-white py-2 px-4 rounded hover:bg-emerald-500">
         Cadastrar
       </button>
     </form>

@@ -37,13 +37,13 @@ export default function ReportsPage() {
         {/* Filtro */}
         <div className="mt-4 mb-6 flex gap-2">
           <button
-            className={`px-4 py-2 rounded ${filter === "week" ? "bg-blue-500 text-white" : "bg-gray-200"}`}
+            className={`px-4 py-2 rounded ${filter === "week" ? "bg-emerald-500 text-white" : "bg-gray-200"}`}
             onClick={() => setFilter("week")}
           >
             Semana
           </button>
           <button
-            className={`px-4 py-2 rounded ${filter === "month" ? "bg-blue-500 text-white" : "bg-gray-200"}`}
+            className={`px-4 py-2 rounded ${filter === "month" ? "bg-emerald-500 text-white" : "bg-gray-200"}`}
             onClick={() => setFilter("month")}
           >
             Mês

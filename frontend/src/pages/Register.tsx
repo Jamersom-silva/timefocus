@@ -53,7 +53,7 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-r from-blue-400 to-indigo-600">
+    <div className="min-h-screen flex flex-col bg-gradient-to-r from-emerald-300  via-teal-50 to-cyan-50">
       <Header />
 
       <main className="flex-1 p-6 flex flex-col items-center justify-center">
@@ -67,7 +67,7 @@ export default function RegisterPage() {
 
           <form
             onSubmit={handleRegister}
-            className="flex flex-col gap-4"
+            className="flex flex-col gap-4 "
           >
             <Input
               label="Nome"
@@ -93,11 +93,11 @@ export default function RegisterPage() {
 
             {error && <p className="text-red-500 text-center">{error}</p>}
 
-            <Button variant="primary" size="lg" disabled={loading}>
+            <Button  variant="primary" size="lg" disabled={loading}>
               {loading ? "Cadastrando..." : "Cadastrar"}
             </Button>
 
-            <div className="flex justify-center text-sm text-blue-500 mt-2">
+            <div className="flex justify-center text-sm text-black-500 mt-2">
               <button
                 type="button"
                 onClick={() => navigate("/login")}

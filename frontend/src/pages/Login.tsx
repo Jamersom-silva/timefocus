@@ -37,7 +37,7 @@ export default function Login() {
         {/* Back to home */}
         <Link 
           to="/" 
-          className="inline-flex items-center gap-2 text-gray-600 hover:text-blue-600 transition-colors mb-8 group"
+          className="inline-flex items-center gap-2 text-gray-600 hover:text-emerald-500 transition-colors mb-8 group"
         >
           <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
           Voltar ao início
@@ -47,7 +47,7 @@ export default function Login() {
           <CardHeader className="text-center space-y-4">
             {/* Logo */}
             <div className="flex justify-center">
-              <div className="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center">
+              <div className="w-12 h-12 bg-emerald-500 rounded-xl flex items-center justify-center">
                 <span className="text-white font-bold text-xl">T</span>
               </div>
             </div>
@@ -77,7 +77,7 @@ export default function Login() {
                     placeholder="seu@email.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="pl-10 h-12 border-gray-200 focus:border-blue-500 focus:ring-blue-500"
+                    className="pl-10 h-12 border-gray-200 focus:border-emerald-500 focus:ring-emerald-500"
                     required
                   />
                 </div>
@@ -96,7 +96,7 @@ export default function Login() {
                     placeholder="Sua senha"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="pl-10 pr-10 h-12 border-gray-200 focus:border-blue-500 focus:ring-blue-500"
+                    className="pl-10 pr-10 h-12 border-gray-200 focus:border-emerald-500 focus:ring-emerald-500"
                     required
                   />
                   <button
@@ -112,10 +112,10 @@ export default function Login() {
               {/* Remember me & Forgot password */}
               <div className="flex items-center justify-between">
                 <label className="flex items-center space-x-2 cursor-pointer">
-                  <input type="checkbox" className="rounded border-gray-300 text-blue-600 focus:ring-blue-500" />
+                  <input type="checkbox" className="rounded border-gray-300 text-emerald-500 focus:ring-emerald-500" />
                   <span className="text-sm text-gray-600">Lembrar de mim</span>
                 </label>
-                <Link to="/forgot-password" className="text-sm text-blue-600 hover:text-blue-700 font-medium">
+                <Link to="/forgot-password" className="text-sm text-emerald-500 hover:text-emerald-500 font-medium">
                   Esqueceu a senha?
                 </Link>
               </div>
@@ -123,7 +123,7 @@ export default function Login() {
               {/* Login Button */}
               <Button 
                 type="submit" 
-                className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200"
+                className="w-full h-12 bg-emerald-500 hover:bg-emerald-500 text-white font-semibold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200"
                 disabled={isLoading}
               >
                 {isLoading ? (
@@ -149,7 +149,7 @@ export default function Login() {
             <div className="space-y-3">
               <Button 
                 variant="outline" 
-                className="w-full h-12 border-gray-200 hover:bg-gray-50 font-medium"
+                className="w-full h-12 border-gray-200 hover:bg-emerald-500 font-medium"
               >
                 <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24">
                   <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -162,7 +162,7 @@ export default function Login() {
               
               <Button 
                 variant="outline" 
-                className="w-full h-12 border-gray-200 hover:bg-gray-50 font-medium"
+                className="w-full h-12 border-gray-200 hover:bg-emerald-500 font-medium"
               >
                 <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
@@ -175,7 +175,7 @@ export default function Login() {
           <CardFooter className="text-center">
             <p className="text-sm text-gray-600">
               Não tem uma conta?{" "}
-              <Link to="/register" className="text-blue-600 hover:text-blue-700 font-semibold">
+              <Link to="/register" className="text-emerald-500 hover:text-emerald-500 font-semibold">
                 Cadastre-se grátis
               </Link>
             </p>
@@ -191,7 +191,7 @@ export default function Login() {
               <span>Dados seguros</span>
             </div>
             <div className="flex items-center gap-1">
-              <span className="text-blue-500">⚡</span>
+              <span className="text-emerald-500">⚡</span>
               <span>Login rápido</span>
             </div>
             <div className="flex items-center gap-1">

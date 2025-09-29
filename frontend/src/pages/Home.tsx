@@ -9,7 +9,7 @@ export default function HomePage() {
       <Header />
 
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 py-20 px-6 overflow-hidden">
+      <section className="relative bg-gradient-to-br from-emerald-300 via-teal-50 to-cyan-50 py-20 px-6 overflow-hidden">
         {/* Background decorations */}
         <div className="absolute inset-0">
           <div className="absolute top-20 left-10 w-64 h-64 bg-emerald-200 rounded-full opacity-20 blur-3xl"></div>
@@ -98,7 +98,7 @@ export default function HomePage() {
           title="Foque com o Pomodoro"
           description="Estude em ciclos de 25 minutos com pausas automáticas. Acompanhe seu progresso em tempo real e mantenha o foco máximo em suas tarefas mais importantes."
           mockupText="Timer Pomodoro Inteligente"
-          bgColor="bg-white"
+          bgColor="bg-gradient-to-br via-cyan-50 to-emerald-00  from-teal-50 py-20 px-6 overflow-hidden"
         />
 
         <FeatureSection
@@ -107,7 +107,7 @@ export default function HomePage() {
           description="Veja sua produtividade em relatórios diários, semanais e mensais. Descubra padrões, identifique seus horários mais produtivos e otimize sua rotina de estudos."
           mockupText="Dashboard de Produtividade"
           reverse={true}
-          bgColor="bg-gray-50"
+          bgColor="bg-gradient-to-br via-cyan-50 to-emerald-00  from-teal-50 py-20 px-6 overflow-hidden"
         />
 
         <FeatureSection
@@ -115,7 +115,7 @@ export default function HomePage() {
           title="Exercícios com IA"
           description="Gere automaticamente exercícios personalizados com base no conteúdo que está estudando. Nossa IA cria questões adaptadas ao seu nível e área de conhecimento."
           mockupText="Gerador de Exercícios IA"
-          bgColor="bg-white"
+          bgColor="bg-gradient-to-br via-cyan-50 to-emerald-00  from-teal-50 py-20 px-6 overflow-hidden"
         />
 
         <FeatureSection
@@ -124,12 +124,12 @@ export default function HomePage() {
           description="Ganhe pontos, conquistas e veja seu ranking. Transforme seus estudos em uma jornada motivadora com metas, desafios e recompensas que mantêm você engajado."
           mockupText="Sistema de Conquistas"
           reverse={true}
-          bgColor="bg-gray-50"
+          bgColor="bg-gradient-to-br via-cyan-50 to-emerald-00  from-teal-50 py-20 px-6 overflow-hidden"
         />
       </div>
 
       {/* Stats Section */}
-      <section className="bg-white py-20 px-6">
+      <section className="bg-gradient-to-br via-cyan-50 to-emerald-00  from-teal-50 py-20 px-6">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
@@ -142,19 +142,19 @@ export default function HomePage() {
 
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div className="text-center">
-              <div className="text-4xl font-bold text-emerald-600 mb-2">50k+</div>
+              <div className="text-4xl font-bold text- mb-2">50k+</div>
               <p className="text-gray-600">Estudantes ativos</p>
             </div>
             <div className="text-center">
-              <div className="text-4xl font-bold text-emerald-600 mb-2">2M+</div>
+              <div className="text-4xl font-bold text-600 mb-2">2M+</div>
               <p className="text-gray-600">Horas de estudo</p>
             </div>
             <div className="text-center">
-              <div className="text-4xl font-bold text-emerald-600 mb-2">85%</div>
+              <div className="text-4xl font-bold text-black-600 mb-2">85%</div>
               <p className="text-gray-600">Melhoria na produtividade</p>
             </div>
             <div className="text-center">
-              <div className="text-4xl font-bold text-emerald-600 mb-2">4.9★</div>
+              <div className="text-4xl font-bold text- mb-2">4.9★</div>
               <p className="text-gray-600">Avaliação dos usuários</p>
             </div>
           </div>
