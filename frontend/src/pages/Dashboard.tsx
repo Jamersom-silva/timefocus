@@ -1,4 +1,4 @@
-import Header from "../../components/Header/Header";
+import Header from "../components/Header";
 import { Clock, Target, BookOpen, TrendingUp, Calendar, Award } from "lucide-react";
 
 export default function DashboardPage() {

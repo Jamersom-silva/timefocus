@@ -57,12 +57,25 @@ export const api = {
     }),
 
   // ---------- Subjects ----------
-  getSubjects: () => request<SubjectOut[]>("/api/subjects"),
-  createSubject: (data: SubjectCreate) =>
-    request<SubjectOut>("/api/subjects", { 
-      method: "POST", 
-      body: JSON.stringify(data) 
-    }),
+getSubjects: () => request<SubjectOut[]>("/api/subjects"),
+createSubject: (data: SubjectCreate) =>
+  request<SubjectOut>("/api/subjects", { 
+    method: "POST", 
+    body: JSON.stringify(data) 
+  }),
+
+// 👇 Novos métodos para Subjects
+updateSubject: (id: number, data: SubjectCreate) =>
+  request<SubjectOut>(`/api/subjects/${id}`, { 
+    method: "PUT", // ou PATCH se preferir
+    body: JSON.stringify(data)
+  }),
+
+deleteSubject: (id: number) =>
+  request<{ success: boolean }>(`/api/subjects/${id}`, { 
+    method: "DELETE"
+  }),
+
 
   // ---------- Exercises ----------
   getExercises: () => request<ExerciseOut[]>("/api/exercises"),

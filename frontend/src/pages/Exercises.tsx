@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { api } from "../../services/api";
-import type { ExerciseOut, ExerciseCreate, SubjectOut } from "../../types/api";
-import Header from "../../components/Header/Header";
+import { api } from "../services/api";
+import type { ExerciseOut, ExerciseCreate, SubjectOut } from "../types/api";
+import Header from "../components/Header";
 import { BookOpen, Plus, Check, X, Brain, Filter, Search, Sparkles } from "lucide-react";
 
 export default function ExercisesPage() {

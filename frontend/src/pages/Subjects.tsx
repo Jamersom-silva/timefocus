@@ -1,10 +1,10 @@
 import { useState, useEffect, useCallback, useContext } from "react";
-import Header from "../../components/Header/Header";
-import Input from "../../components/Input/Input";
-import Button from "../../components/Button/Button";
-import { UserContext } from "../../contexts/UserContext";
-import { api } from "../../services/api";
-import type { SubjectOut } from "../../types/api";
+import Header from "../components/Header";
+import Input from "../components/Input";
+import { Button } from "@/components/ui/Button";
+import { UserContext } from "../contexts/UserContext";
+import { api } from "../services/api";
+import type { SubjectOut } from "../types/api";
 import { BookOpen, Plus, Edit3, Trash2, Search, Filter, GraduationCap } from "lucide-react";
 
 export default function SubjectsPage() {

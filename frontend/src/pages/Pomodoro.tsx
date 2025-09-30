@@ -1,9 +1,9 @@
 import { useState, useEffect, useContext, useCallback } from "react";
-import Header from "../../components/Header/Header";
-import Button from "../../components/Button/Button";
-import { UserContext } from "../../contexts/UserContext";
-import { api } from "../../services/api";
-import type { PomodoroCycleOut } from "../../types/api";
+import Header from "../components/Header";
+import { Button } from "@/components/ui/Button";
+import { UserContext } from "../contexts/UserContext";
+import { api } from "../services/api";
+import type { PomodoroCycleOut } from "../types/api";
 import { Play, Pause, Square, Settings, Clock, Target, Coffee } from "lucide-react";
 
 export default function PomodoroPage() {

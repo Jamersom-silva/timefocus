@@ -1,4 +1,4 @@
-import Header from "../../components/Header/Header";
+import Header from "../components/Header";
 import { User, Settings, Award, Target, Clock, BookOpen, Bell, Palette, Volume2, Shield } from "lucide-react";
 import { useState } from "react";
 
