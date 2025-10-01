@@ -49,51 +49,47 @@ export const api = {
   getCurrentUser: () => request<UserOut>("/auth/me"),
 
   // ---------- Pomodoro ----------
-  getPomodoroCycles: () => request<PomodoroCycleOut[]>("/api/pomodoro"),
+  getPomodoroCycles: () => request<PomodoroCycleOut[]>("/pomodoro"),
   createPomodoroCycle: (data: PomodoroCycleCreate) =>
-    request<PomodoroCycleOut>("/api/pomodoro", { 
+    request<PomodoroCycleOut>("/pomodoro", { 
       method: "POST", 
       body: JSON.stringify(data) 
     }),
 
   // ---------- Subjects ----------
-getSubjects: () => request<SubjectOut[]>("/api/subjects"),
-createSubject: (data: SubjectCreate) =>
-  request<SubjectOut>("/api/subjects", { 
-    method: "POST", 
-    body: JSON.stringify(data) 
-  }),
-
-// 👇 Novos métodos para Subjects
-updateSubject: (id: number, data: SubjectCreate) =>
-  request<SubjectOut>(`/api/subjects/${id}`, { 
-    method: "PUT", // ou PATCH se preferir
-    body: JSON.stringify(data)
-  }),
-
-deleteSubject: (id: number) =>
-  request<{ success: boolean }>(`/api/subjects/${id}`, { 
-    method: "DELETE"
-  }),
-
+  getSubjects: () => request<SubjectOut[]>("/subjects"),
+  createSubject: (data: SubjectCreate) =>
+    request<SubjectOut>("/subjects", { 
+      method: "POST", 
+      body: JSON.stringify(data) 
+    }),
+  updateSubject: (id: number, data: SubjectCreate) =>
+    request<SubjectOut>(`/subjects/${id}`, { 
+      method: "PUT",
+      body: JSON.stringify(data)
+    }),
+  deleteSubject: (id: number) =>
+    request<{ success: boolean }>(`/subjects/${id}`, { 
+      method: "DELETE"
+    }),
 
   // ---------- Exercises ----------
-  getExercises: () => request<ExerciseOut[]>("/api/exercises"),
+  getExercises: () => request<ExerciseOut[]>("/exercises"),
   createExercise: (data: ExerciseCreate) =>
-    request<ExerciseOut>("/api/exercises", { 
+    request<ExerciseOut>("/exercises", { 
       method: "POST", 
       body: JSON.stringify(data) 
     }),
   updateExercise: (id: number, data: Partial<Pick<ExerciseOut, "completed" | "answer">>) =>
-    request<ExerciseOut>(`/api/exercises/${id}`, { 
+    request<ExerciseOut>(`/exercises/${id}`, { 
       method: "PATCH", 
       body: JSON.stringify(data) 
     }),
 
   // ---------- Reports ----------
-  getReports: () => request<ReportOut[]>("/api/reports"),
+  getReports: () => request<ReportOut[]>("/reports"),
   createReport: (data: ReportCreate) =>
-    request<ReportOut>("/api/reports", { 
+    request<ReportOut>("/reports", { 
       method: "POST", 
       body: JSON.stringify(data) 
     }),

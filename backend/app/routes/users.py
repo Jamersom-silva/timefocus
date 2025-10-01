@@ -1,10 +1,11 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from .. import models, schemas, database, auth
+from .. import models, schemas, database
+from. import auth  
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
-@router.post("/register", response_model=schemas.UserResponse)
+@router.post("/register", response_model=schemas.UserOut)
 def register(user: schemas.UserCreate, db: Session = Depends(database.get_db)):
     db_user = db.query(models.User).filter(models.User.email == user.email).first()
     if db_user:
