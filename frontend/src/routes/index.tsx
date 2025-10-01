@@ -11,7 +11,7 @@ import ProfilePage from '../pages/ProfilePage';
 import FeaturesPage from '../pages/Features';
 import ContactPage from '../pages/Contact';
 import AboutPage from '../pages/About';
-
+import PricingPage from '../pages/Pricing'
 export function AppRoutes() {
   return (
     <BrowserRouter>
@@ -30,6 +30,7 @@ export function AppRoutes() {
         <Route path="/features" element={<FeaturesPage />} />
         <Route path="/Contact" element={<ContactPage /> } />
         <Route path="/About" element={<AboutPage />} />
+        <Route path="/Pricing" element={<PricingPage />} />
       </Routes>
     </BrowserRouter>
   );
