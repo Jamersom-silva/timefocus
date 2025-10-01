@@ -1,14 +1,17 @@
-import { useState, useEffect, useCallback, useContext } from "react";
+import { useState, useEffect, useCallback, useContext, useRef } from "react";
 import Header from "../components/Header";
-import Input from "../components/Input";
 import { Button } from "@/components/ui/Button";
 import { UserContext } from "../contexts/UserContext";
 import { api } from "../services/api";
 import type { SubjectOut } from "../types/api";
-import { BookOpen, Plus, Edit3, Trash2, Search, GraduationCap } from "lucide-react";
+import {
+  BookOpen, Plus, Edit3, Trash2, Search, GraduationCap,
+  Grid3X3, Home
+} from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export default function SubjectsPage() {
-  // ✅ Fallback seguro caso userContext seja null
+  const navigate = useNavigate();
   const userContext = useContext(UserContext);
   const user = userContext?.user ?? { id: 0, username: "Usuário" };
 
@@ -20,14 +23,37 @@ export default function SubjectsPage() {
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [editingSubject, setEditingSubject] = useState<SubjectOut | null>(null);
 
-  // Fetch subjects com fallback
+  // Menu de navegação
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+  const navigationOptions = [
+    { name: 'Funcionalidades', icon: Grid3X3, description: 'Ver todas as funcionalidades', link: '/features' },
+    { name: 'Dashboard', icon: Home, description: 'Voltar ao painel', link: '/' },
+    { name: 'Matérias', icon: BookOpen, description: 'Organizar suas matérias', link: '/subjects' },
+  ];
+
+  const handleNavigation = (link: string) => {
+    navigate(link);
+    setMenuOpen(false);
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setMenuOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  // Fetch subjects
   const fetchSubjects = useCallback(async () => {
     try {
       const data = await api.getSubjects();
       setSubjects(data);
     } catch (err) {
       console.error("Erro ao buscar subjects:", err);
-      // fallback: mock local
       setSubjects([
         { id: 1, user_id: user.id, name: "Matemática", description: "Números e fórmulas" },
         { id: 2, user_id: user.id, name: "História", description: "Eventos e civilizações" },
@@ -36,31 +62,20 @@ export default function SubjectsPage() {
     }
   }, [user.id]);
 
+  useEffect(() => { fetchSubjects(); }, [fetchSubjects]);
+
   const addSubject = async () => {
     if (!name.trim()) return;
     setLoading(true);
     try {
       await api.createSubject({ name: name.trim(), description: description.trim() });
-      setName("");
-      setDescription("");
-      setShowCreateForm(false);
+      setName(""); setDescription(""); setShowCreateForm(false);
       fetchSubjects();
-    } catch (err) {
-      console.error("Erro ao criar subject:", err);
-      // fallback: adicionar localmente
-      const newMock: SubjectOut = {
-        id: Date.now(),
-        user_id: user.id,
-        name: name.trim(),
-        description: description.trim(),
-      };
+    } catch {
+      const newMock: SubjectOut = { id: Date.now(), user_id: user.id, name: name.trim(), description: description.trim() };
       setSubjects(prev => [...prev, newMock]);
-      setName("");
-      setDescription("");
-      setShowCreateForm(false);
-    } finally {
-      setLoading(false);
-    }
+      setName(""); setDescription(""); setShowCreateForm(false);
+    } finally { setLoading(false); }
   };
 
   const updateSubject = async () => {
@@ -68,22 +83,12 @@ export default function SubjectsPage() {
     setLoading(true);
     try {
       await api.updateSubject(editingSubject.id, { name: name.trim(), description: description.trim() });
-      setName("");
-      setDescription("");
-      setEditingSubject(null);
+      setName(""); setDescription(""); setEditingSubject(null);
       fetchSubjects();
-    } catch (err) {
-      console.error("Erro ao atualizar subject:", err);
-      // fallback local
-      setSubjects(prev =>
-        prev.map(s => (s.id === editingSubject.id ? { ...s, name: name.trim(), description: description.trim() } : s))
-      );
-      setName("");
-      setDescription("");
-      setEditingSubject(null);
-    } finally {
-      setLoading(false);
-    }
+    } catch {
+      setSubjects(prev => prev.map(s => (s.id === editingSubject.id ? { ...s, name: name.trim(), description: description.trim() } : s)));
+      setName(""); setDescription(""); setEditingSubject(null);
+    } finally { setLoading(false); }
   };
 
   const deleteSubject = async (subjectId: number) => {
@@ -91,8 +96,7 @@ export default function SubjectsPage() {
     try {
       await api.deleteSubject(subjectId);
       setSubjects(prev => prev.filter(s => s.id !== subjectId));
-    } catch (err) {
-      console.error("Erro ao excluir subject:", err);
+    } catch {
       setSubjects(prev => prev.filter(s => s.id !== subjectId));
     }
   };
@@ -103,17 +107,7 @@ export default function SubjectsPage() {
     setDescription(subject.description || "");
     setShowCreateForm(true);
   };
-
-  const cancelEditing = () => {
-    setEditingSubject(null);
-    setName("");
-    setDescription("");
-    setShowCreateForm(false);
-  };
-
-  useEffect(() => {
-    fetchSubjects();
-  }, [fetchSubjects]);
+  const cancelEditing = () => { setEditingSubject(null); setName(""); setDescription(""); setShowCreateForm(false); };
 
   const filteredSubjects = subjects.filter(
     subject =>
@@ -129,52 +123,71 @@ export default function SubjectsPage() {
   return (
     <div className="subjects-page min-h-screen bg-gray-50">
       <Header />
-
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Olá, {user.username}! 👋
-          </h1>
-          <p className="text-gray-600">Organize suas matérias de estudo</p>
+
+        {/* Top bar: saudação + menu */}
+        <div className="flex items-center justify-between mb-8">
+          <div className="text-left">
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">Olá, {user.username}! 👋</h1>
+            <p className="text-gray-600">Organize suas matérias de estudo</p>
+          </div>
+
+          <div className="relative" ref={menuRef}>
+            <button
+              onClick={() => setMenuOpen(!menuOpen)}
+              className="flex items-center gap-2 px-4 py-2 bg-emerald-50 text-emerald-700 rounded-lg hover:bg-emerald-100 transition"
+            >
+              <Grid3X3 size={18} /> Outras Opções
+            </button>
+            {menuOpen && (
+              <div className="absolute right-0 mt-2 w-72 bg-white border rounded-xl shadow-lg z-20 p-2">
+                {navigationOptions.map((item, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => handleNavigation(item.link)}
+                    className="flex items-start gap-3 p-3 rounded-lg hover:bg-emerald-50 transition w-full text-left"
+                  >
+                    <item.icon size={20} className="text-emerald-600 mt-1" />
+                    <div>
+                      <p className="text-sm font-semibold text-gray-800">{item.name}</p>
+                      <p className="text-xs text-gray-500">{item.description}</p>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Stats Overview */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">Total de Matérias</p>
-                <p className="text-3xl font-bold text-gray-900">{subjects.length}</p>
-              </div>
-              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                <BookOpen className="w-6 h-6 text-blue-600" />
-              </div>
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-gray-600">Total de Matérias</p>
+              <p className="text-3xl font-bold text-gray-900">{subjects.length}</p>
+            </div>
+            <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+              <BookOpen className="w-6 h-6 text-blue-600" />
             </div>
           </div>
 
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">Matérias Ativas</p>
-                <p className="text-3xl font-bold text-green-600">{subjects.length}</p>
-              </div>
-              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                <GraduationCap className="w-6 h-6 text-green-600" />
-              </div>
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-gray-600">Matérias Ativas</p>
+              <p className="text-3xl font-bold text-green-600">{subjects.length}</p>
+            </div>
+            <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+              <GraduationCap className="w-6 h-6 text-green-600" />
             </div>
           </div>
 
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">Mais Estudada</p>
-                <p className="text-lg font-bold text-purple-600">
-                  {subjects.length > 0 ? subjects[0].name : "Nenhuma"}
-                </p>
-              </div>
-              <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-                <BookOpen className="w-6 h-6 text-purple-600" />
-              </div>
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-gray-600">Mais Estudada</p>
+              <p className="text-lg font-bold text-purple-600">{subjects.length > 0 ? subjects[0].name : "Nenhuma"}</p>
+            </div>
+            <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+              <BookOpen className="w-6 h-6 text-purple-600" />
             </div>
           </div>
         </div>
@@ -212,12 +225,10 @@ export default function SubjectsPage() {
               <h3 className="text-lg font-semibold text-gray-900 mb-4">
                 {editingSubject ? 'Editar Matéria' : 'Nova Matéria'}
               </h3>
-              
+
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Nome da Matéria
-                  </label>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Nome da Matéria</label>
                   <input
                     type="text"
                     value={name}
@@ -228,9 +239,7 @@ export default function SubjectsPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Descrição (opcional)
-                  </label>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Descrição (opcional)</label>
                   <textarea
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
@@ -278,7 +287,7 @@ export default function SubjectsPage() {
                         )}
                       </div>
                     </div>
-                    
+
                     <div className="flex space-x-2">
                       <button
                         onClick={() => startEditing(subject)}
@@ -295,7 +304,6 @@ export default function SubjectsPage() {
                     </div>
                   </div>
 
-                  {/* Subject Stats */}
                   <div className="grid grid-cols-2 gap-4 mt-4">
                     <div className="text-center">
                       <p className="text-2xl font-bold text-gray-900">0</p>
@@ -307,75 +315,21 @@ export default function SubjectsPage() {
                     </div>
                   </div>
 
-                  {/* Quick Actions */}
                   <div className="mt-4 flex space-x-2">
                     <button className="flex-1 bg-teal-100 text-teal-700 py-2 px-3 rounded-lg text-sm font-medium hover:bg-teal-200 transition-colors">
                       Estudar
                     </button>
                     <button className="flex-1 bg-blue-100 text-blue-700 py-2 px-3 rounded-lg text-sm font-medium hover:bg-blue-200 transition-colors">
-                      Exercícios
+                      Revisar
                     </button>
                   </div>
                 </div>
               ))}
             </div>
           ) : (
-            <div className="text-center py-12">
-              <BookOpen className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">
-                {subjects.length === 0 ? 'Nenhuma matéria cadastrada' : 'Nenhuma matéria encontrada'}
-              </h3>
-              <p className="text-gray-600 mb-6">
-                {subjects.length === 0 
-                  ? 'Comece criando sua primeira matéria de estudo!' 
-                  : 'Tente ajustar o termo de busca.'}
-              </p>
-              {subjects.length === 0 && (
-                <button
-                  onClick={() => setShowCreateForm(true)}
-                  className="inline-flex items-center space-x-2 bg-teal-500 hover:bg-teal-600 text-white px-6 py-3 rounded-lg font-medium transition-colors"
-                >
-                  <Plus className="w-5 h-5" />
-                  <span>Criar Primeira Matéria</span>
-                </button>
-              )}
-            </div>
+            <p className="p-6 text-gray-500 text-center">Nenhuma matéria encontrada.</p>
           )}
         </div>
-
-        {/* Quick Tips */}
-        {subjects.length > 0 && (
-          <div className="mt-8 bg-gradient-to-r from-teal-50 to-blue-50 rounded-xl border border-teal-200 p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">💡 Dicas para Organizar suas Matérias</h3>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="flex items-start space-x-3">
-                <div className="w-2 h-2 bg-teal-500 rounded-full mt-2"></div>
-                <p className="text-sm text-gray-700">
-                  <strong>Seja específico:</strong> Use nomes claros como "Cálculo I" ao invés de apenas "Matemática".
-                </p>
-              </div>
-              <div className="flex items-start space-x-3">
-                <div className="w-2 h-2 bg-blue-500 rounded-full mt-2"></div>
-                <p className="text-sm text-gray-700">
-                  <strong>Use descrições:</strong> Adicione detalhes sobre o conteúdo ou professor.
-                </p>
-              </div>
-              <div className="flex items-start space-x-3">
-                <div className="w-2 h-2 bg-purple-500 rounded-full mt-2"></div>
-                <p className="text-sm text-gray-700">
-                  <strong>Organize por prioridade:</strong> Foque nas matérias mais importantes primeiro.
-                </p>
-              </div>
-              <div className="flex items-start space-x-3">
-                <div className="w-2 h-2 bg-orange-500 rounded-full mt-2"></div>
-                <p className="text-sm text-gray-700">
-                  <strong>Revise regularmente:</strong> Mantenha suas matérias atualizadas.
-                </p>
-              </div>
-            </div>
-          </div>
-        )}
       </main>
     </div>
   );

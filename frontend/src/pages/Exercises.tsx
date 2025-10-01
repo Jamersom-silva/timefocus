@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { api } from "../services/api";
 import type { ExerciseOut, ExerciseCreate, SubjectOut } from "../types/api";
 import Header from "../components/Header";
-import { BookOpen, Plus, Check, X, Brain, Filter, Search, Sparkles } from "lucide-react";
+import { BookOpen, Plus, Check, X, Sparkles, Grid3X3, Home } from "lucide-react";
 
 export default function ExercisesPage() {
   const [exercises, setExercises] = useState<ExerciseOut[]>([]);
@@ -16,6 +17,26 @@ export default function ExercisesPage() {
   const [selectedSubject, setSelectedSubject] = useState<number>(0);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [showCreateForm, setShowCreateForm] = useState<boolean>(false);
+  const [showNavigation, setShowNavigation] = useState(false);
+
+  const navigate = useNavigate();
+
+  const navigationOptions = [
+    { name: 'Funcionalidades', icon: Grid3X3, description: 'Ver todas as funcionalidades', link: '/features' },
+    { name: 'Dashboard', icon: Home, description: 'Voltar ao painel', link: '/' },
+    { name: 'Timer Pomodoro', icon: BookOpen, description: 'Iniciar sessão de foco', link: '/pomodoro' },
+    { name: 'Exercícios IA', icon: BookOpen, description: 'Praticar com exercícios', link: '/exercises' },
+    { name: 'Matérias', icon: BookOpen, description: 'Gerenciar matérias', link: '/subjects' },
+    { name: 'Relatórios', icon: BookOpen, description: 'Ver análises', link: '/reports' },
+    { name: 'Perfil', icon: BookOpen, description: 'Configurações e conquistas', link: '/profile' },
+    { name: 'Comunidade', icon: BookOpen, description: 'Conectar com estudantes', link: '/community' },
+    { name: 'Artigos', icon: BookOpen, description: 'Dicas de estudo', link: '/articles' }
+  ];
+
+  const handleNavigation = (link: string) => {
+    navigate(link);
+    setShowNavigation(false);
+  };
 
   const fetchExercises = async () => {
     try {
@@ -57,7 +78,6 @@ export default function ExercisesPage() {
   };
 
   const generateAIExercise = async () => {
-    // Simulação de geração com IA
     const aiQuestions = [
       "Qual é a derivada de x²?",
       "Explique o teorema de Pitágoras",
@@ -65,12 +85,8 @@ export default function ExercisesPage() {
       "Como conjugar o verbo 'to be' no presente?",
       "Qual é a fórmula da área do círculo?"
     ];
-    
     const randomQuestion = aiQuestions[Math.floor(Math.random() * aiQuestions.length)];
-    setNewExercise({
-      ...newExercise,
-      question: randomQuestion
-    });
+    setNewExercise({ ...newExercise, question: randomQuestion });
     setShowCreateForm(true);
   };
 
@@ -80,15 +96,12 @@ export default function ExercisesPage() {
   }, []);
 
   const filteredExercises = exercises.filter(exercise => {
-    const matchesFilter = filter === 'all' || 
+    const matchesFilter = filter === 'all' ||
       (filter === 'completed' && exercise.completed) ||
       (filter === 'pending' && !exercise.completed);
-    
     const matchesSubject = selectedSubject === 0 || exercise.subject_id === selectedSubject;
-    
-    const matchesSearch = searchTerm === "" || 
+    const matchesSearch = searchTerm === "" ||
       exercise.question.toLowerCase().includes(searchTerm.toLowerCase());
-
     return matchesFilter && matchesSubject && matchesSearch;
   });
 
@@ -103,10 +116,41 @@ export default function ExercisesPage() {
       <Header />
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Header Section */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Exercícios</h1>
-          <p className="text-gray-600">Pratique e teste seus conhecimentos</p>
+        {/* Navbar + Outras Opções */}
+        <div className="flex items-center justify-between mb-8 bg-white rounded-xl shadow-sm border p-4">
+          <div className="flex items-center space-x-4">
+            <BookOpen className="w-5 h-5 text-teal-600" />
+            <span className="text-lg font-semibold text-gray-900">Exercícios</span>
+          </div>
+
+          {/* Menu "Outras Opções" */}
+          <div className="relative">
+            <button
+              onClick={() => setShowNavigation(!showNavigation)}
+              className="flex items-center gap-2 px-4 py-2 bg-teal-50 text-teal-700 rounded-lg hover:bg-teal-100 transition"
+            >
+              <Grid3X3 size={18} />
+              Outras Opções
+            </button>
+
+            {showNavigation && (
+              <div className="absolute right-0 mt-2 w-72 bg-white border rounded-xl shadow-lg z-20 p-2">
+                {navigationOptions.map((item, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => handleNavigation(item.link)}
+                    className="flex items-start gap-3 p-3 rounded-lg hover:bg-teal-50 transition w-full text-left"
+                  >
+                    <item.icon size={20} className="text-teal-600 mt-1" />
+                    <div>
+                      <p className="text-sm font-semibold text-gray-800">{item.name}</p>
+                      <p className="text-xs text-gray-500">{item.description}</p>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Stats Cards */}
@@ -154,7 +198,7 @@ export default function ExercisesPage() {
             <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
               {/* Search */}
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <BookOpen className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                 <input
                   type="text"
                   placeholder="Buscar exercícios..."

@@ -1,27 +1,36 @@
 import { useState, useEffect, useContext, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import { UserContext } from "../contexts/UserContext";
 import { api } from "../services/api";
 import type { PomodoroCycleOut } from "../types/api";
-import { Play, Pause, Square, Settings, Clock, Target, Coffee } from "lucide-react";
+import {
+  Play,
+  Pause,
+  Square,
+  Settings,
+  Clock,
+  Target,
+  Coffee,
+  Grid3X3,
+  Home,
+  BookOpen
+} from "lucide-react";
 
 export default function PomodoroPage() {
-  // Usuario fake caso o contexto não tenha
+  const navigate = useNavigate();
   const contextUser = useContext(UserContext)?.user;
   const user = contextUser ?? { id: 1, username: "Jamersom" };
 
-  // Estados principais
   const [cycles, setCycles] = useState<PomodoroCycleOut[]>([]);
   const [activeCycle, setActiveCycle] = useState<PomodoroCycleOut | null>(null);
   const [secondsLeft, setSecondsLeft] = useState<number>(0);
   const [isRunning, setIsRunning] = useState<boolean>(false);
   const [cycleType, setCycleType] = useState<'focus' | 'break' | 'longBreak'>('focus');
   const [completedCycles, setCompletedCycles] = useState<number>(0);
-
-  // Tempo customizável
+  const [menuOpen, setMenuOpen] = useState(false);
   const [customTime, setCustomTime] = useState({ focus: 25, break: 5, longBreak: 15 });
 
-  // Fetch histórico
   const fetchCycles = useCallback(async () => {
     try {
       const data = await api.getPomodoroCycles();
@@ -36,7 +45,6 @@ export default function PomodoroPage() {
     fetchCycles();
   }, [fetchCycles]);
 
-  // Timer
   useEffect(() => {
     let interval: NodeJS.Timeout;
     if (isRunning && secondsLeft > 0) {
@@ -66,7 +74,6 @@ export default function PomodoroPage() {
     }
   };
 
-  // Controles do timer
   const startTimer = () => {
     if (secondsLeft === 0) setSecondsLeft(customTime[cycleType] * 60);
     setIsRunning(true);
@@ -103,7 +110,6 @@ export default function PomodoroPage() {
     setCompletedCycles(0);
   };
 
-  // Formatação do timer
   const formatTime = (totalSeconds: number) => {
     const minutes = Math.floor(totalSeconds / 60);
     const seconds = totalSeconds % 60;
@@ -114,29 +120,88 @@ export default function PomodoroPage() {
 
   const getCycleInfo = () => {
     switch(cycleType) {
-      case 'focus': return { title: 'Foco', icon: Target, color: 'teal', bgColor: 'bg-teal-50', textColor: 'text-teal-600' };
-      case 'break': return { title: 'Pausa Curta', icon: Coffee, color: 'blue', bgColor: 'bg-blue-50', textColor: 'text-blue-600' };
-      case 'longBreak': return { title: 'Pausa Longa', icon: Coffee, color: 'purple', bgColor: 'bg-purple-50', textColor: 'text-purple-600' };
+      case 'focus': return { title: 'Foco', icon: Target, bgColor: 'bg-teal-50', textColor: 'text-teal-600' };
+      case 'break': return { title: 'Pausa Curta', icon: Coffee, bgColor: 'bg-blue-50', textColor: 'text-blue-600' };
+      case 'longBreak': return { title: 'Pausa Longa', icon: Coffee, bgColor: 'bg-purple-50', textColor: 'text-purple-600' };
     }
   };
 
   const cycleInfo = getCycleInfo();
   const IconComponent = cycleInfo.icon;
 
+  const navigationOptions = [
+    { name: 'Funcionalidades', icon: Grid3X3, description: 'Ver todas as funcionalidades', link: '/features' },
+    { name: 'Dashboard', icon: Home, description: 'Voltar ao painel', link: '/' },
+    { name: 'Timer Pomodoro', icon: BookOpen, description: 'Iniciar sessão de foco', link: '/pomodoro' },
+    { name: 'Relatórios', icon: BookOpen, description: 'Ver análises', link: '/reports' },
+    { name: 'Perfil', icon: BookOpen, description: 'Configurações e conquistas', link: '/profile' },
+    { name: 'Comunidade', icon: BookOpen, description: 'Conectar com estudantes', link: '/community' },
+    { name: 'Artigos', icon: BookOpen, description: 'Dicas de estudo', link: '/articles' }
+  ];
+
+  const handleNavigation = (link: string) => {
+    navigate(link);
+    setMenuOpen(false);
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
-        {/* Saudação */}
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold mb-2">Olá, {user.username} 👋</h1>
-          <p className="text-gray-600">Vamos focar nos seus estudos</p>
+        {/* Navbar + saudação */}
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h1 className="text-3xl font-bold mb-2">Olá, {user.username} 👋</h1>
+            <p className="text-gray-600">Vamos focar nos seus estudos</p>
+          </div>
+
+          {/* Menu */}
+          <div className="relative">
+            <button
+              onClick={() => setMenuOpen(!menuOpen)}
+              className="flex items-center gap-2 px-4 py-2 bg-emerald-50 text-emerald-700 rounded-lg hover:bg-emerald-100 transition"
+            >
+              <Grid3X3 size={18} />
+              Outras Opções
+            </button>
+
+            {menuOpen && (
+              <div className="absolute right-0 mt-2 w-72 bg-white border rounded-xl shadow-lg z-20 p-2">
+                {navigationOptions.map((item, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => handleNavigation(item.link)}
+                    className="flex items-start gap-3 p-3 rounded-lg hover:bg-emerald-50 transition w-full text-left"
+                  >
+                    <item.icon size={20} className="text-emerald-600 mt-1" />
+                    <div>
+                      <p className="text-sm font-semibold text-gray-800">{item.name}</p>
+                      <p className="text-xs text-gray-500">{item.description}</p>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Cards de estatísticas */}
+        <div className="grid grid-cols-2 gap-4 mb-8">
+          <div className="bg-white p-4 rounded-xl shadow text-center">
+            <p className="text-2xl font-bold">{completedCycles}</p>
+            <p className="text-sm text-gray-600">Ciclos Concluídos</p>
+          </div>
+          <div className="bg-white p-4 rounded-xl shadow text-center">
+            <p className="text-2xl font-bold">
+              {Math.floor(completedCycles * customTime.focus / 60)}h {(completedCycles*customTime.focus)%60}m
+            </p>
+            <p className="text-sm text-gray-600">Tempo Total</p>
+          </div>
         </div>
 
         {/* Timer */}
         <div className="bg-white rounded-2xl shadow-lg border p-8 mb-8">
-          {/* Cycle Indicator */}
           <div className="flex items-center justify-center mb-6">
             <div className={`w-12 h-12 rounded-full flex items-center justify-center mr-3 ${cycleInfo.bgColor}`}>
               <IconComponent className={`w-6 h-6 ${cycleInfo.textColor}`} />
@@ -176,19 +241,6 @@ export default function PomodoroPage() {
             }
             <button onClick={stopTimer} className="bg-gray-500 text-white px-6 py-3 rounded-xl flex items-center space-x-2"><Square className="w-5 h-5"/><span>Parar</span></button>
             <button onClick={resetTimer} className="bg-red-500 text-white px-6 py-3 rounded-xl flex items-center space-x-2"><Settings className="w-5 h-5"/><span>Reset</span></button>
-          </div>
-
-          {/* Contador de Ciclos */}
-          <div className="flex items-center justify-center space-x-8 text-center">
-            <div>
-              <p className="text-2xl font-bold">{completedCycles}</p>
-              <p className="text-sm text-gray-600">Ciclos Concluídos</p>
-            </div>
-            <div className="w-px h-12 bg-gray-300"></div>
-            <div>
-              <p className="text-2xl font-bold">{Math.floor(completedCycles * customTime.focus / 60)}h {(completedCycles*customTime.focus)%60}m</p>
-              <p className="text-sm text-gray-600">Tempo Total</p>
-            </div>
           </div>
         </div>
 
