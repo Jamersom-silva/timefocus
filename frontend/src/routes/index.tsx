@@ -8,6 +8,9 @@ import PomodoroPage from '../pages/Pomodoro';
 import ExercisesPage from '../pages/Exercises';
 import HomePage from '../pages/Home';
 import ProfilePage from '../pages/ProfilePage';
+import FeaturesPage from '../pages/Features';
+import ContactPage from '../pages/Contact';
+import AboutPage from '../pages/About';
 
 export function AppRoutes() {
   return (
@@ -24,6 +27,9 @@ export function AppRoutes() {
         <Route path="/reports" element={<ReportsPage />} />
         <Route path="/subjects" element={<SubjectsPage />} />
         <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/features" element={<FeaturesPage />} />
+        <Route path="/Contact" element={<ContactPage /> } />
+        <Route path="/About" element={<AboutPage />} />
       </Routes>
     </BrowserRouter>
   );
