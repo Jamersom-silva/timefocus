@@ -48,13 +48,14 @@ export const api = {
 
   getCurrentUser: () => request<UserOut>("/auth/me"),
 
-  // ---------- Pomodoro ----------
-  getPomodoroCycles: () => request<PomodoroCycleOut[]>("/pomodoro"),
-  createPomodoroCycle: (data: PomodoroCycleCreate) =>
-    request<PomodoroCycleOut>("/pomodoro", { 
+ // ---------- Pomodoro ----------
+getPomodoroCycles: () => request<PomodoroCycleOut[]>("/api/pomodoro"),
+createPomodoroCycle: (data: PomodoroCycleCreate) =>
+    request<PomodoroCycleOut>("/api/pomodoro", { 
       method: "POST", 
       body: JSON.stringify(data) 
     }),
+
 
   // ---------- Subjects ----------
   getSubjects: () => request<SubjectOut[]>("/subjects"),

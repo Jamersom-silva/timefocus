@@ -1,25 +1,18 @@
+// frontend/src/pages/Pomodoro.tsx
 import { useState, useEffect, useContext, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import { UserContext } from "../contexts/UserContext";
 import { api } from "../services/api";
-import type { PomodoroCycleOut } from "../types/api";
+import type { PomodoroCycleOut, PomodoroCycleCreate } from "../types/api";
 import {
-  Play,
-  Pause,
-  Square,
-  Settings,
-  Clock,
-  Target,
-  Coffee,
-  Grid3X3,
-  Home,
-  BookOpen
+  Play, Pause, Square, Settings, Clock, Target, Coffee, Grid3X3, Home, BookOpen
 } from "lucide-react";
 
 export default function PomodoroPage() {
   const navigate = useNavigate();
   const contextUser = useContext(UserContext)?.user;
+  const token = localStorage.getItem("token");
   const user = contextUser ?? { id: 1, username: "Jamersom" };
 
   const [cycles, setCycles] = useState<PomodoroCycleOut[]>([]);
@@ -31,7 +24,9 @@ export default function PomodoroPage() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [customTime, setCustomTime] = useState({ focus: 25, break: 5, longBreak: 15 });
 
+  // Fetch ciclos apenas se houver token
   const fetchCycles = useCallback(async () => {
+    if (!token) return;
     try {
       const data = await api.getPomodoroCycles();
       setCycles(data);
@@ -39,11 +34,9 @@ export default function PomodoroPage() {
       console.warn("API não respondeu, usando mock");
       setCycles([]);
     }
-  }, []);
+  }, [token]);
 
-  useEffect(() => {
-    fetchCycles();
-  }, [fetchCycles]);
+  useEffect(() => { fetchCycles(); }, [fetchCycles]);
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
@@ -74,25 +67,36 @@ export default function PomodoroPage() {
     }
   };
 
-  const startTimer = () => {
+  const startTimer = async () => {
     if (secondsLeft === 0) setSecondsLeft(customTime[cycleType] * 60);
     setIsRunning(true);
 
     if (!activeCycle) {
-      const newCycle: PomodoroCycleOut = {
-        id: Date.now(),
-        user_id: user.id,
-        duration: Math.round(customTime[cycleType]),
-        start_time: new Date().toISOString(),
-        end_time: null
-      };
-      setActiveCycle(newCycle);
+      if (!token) {
+        // Mock se não logado
+        const localCycle: PomodoroCycleOut = {
+          id: Date.now(), user_id: user.id, duration: customTime[cycleType],
+          start_time: new Date().toISOString(), end_time: null
+        };
+        setActiveCycle(localCycle);
+        setCycles(prev => [...prev, localCycle]);
+        return;
+      }
 
-      api.createPomodoroCycle({ duration: newCycle.duration }).catch(() => {
+      try {
+        const newCycle: PomodoroCycleCreate = { duration: customTime[cycleType] };
+        const createdCycle = await api.createPomodoroCycle(newCycle);
+        setActiveCycle(createdCycle);
+        setCycles(prev => [...prev, createdCycle]);
+      } catch {
         console.warn("Erro API, adicionando localmente");
-      });
-
-      setCycles(prev => [...prev, newCycle]);
+        const localCycle: PomodoroCycleOut = {
+          id: Date.now(), user_id: user.id, duration: customTime[cycleType],
+          start_time: new Date().toISOString(), end_time: null
+        };
+        setActiveCycle(localCycle);
+        setCycles(prev => [...prev, localCycle]);
+      }
     }
   };
 
@@ -148,24 +152,19 @@ export default function PomodoroPage() {
     <div className="min-h-screen bg-gray-50">
       <Header />
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-
         {/* Navbar + saudação */}
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="text-3xl font-bold mb-2">Olá, {user.username} 👋</h1>
             <p className="text-gray-600">Vamos focar nos seus estudos</p>
           </div>
-
-          {/* Menu */}
           <div className="relative">
             <button
               onClick={() => setMenuOpen(!menuOpen)}
               className="flex items-center gap-2 px-4 py-2 bg-emerald-50 text-emerald-700 rounded-lg hover:bg-emerald-100 transition"
             >
-              <Grid3X3 size={18} />
-              Outras Opções
+              <Grid3X3 size={18} /> Outras Opções
             </button>
-
             {menuOpen && (
               <div className="absolute right-0 mt-2 w-72 bg-white border rounded-xl shadow-lg z-20 p-2">
                 {navigationOptions.map((item, idx) => (
@@ -186,7 +185,7 @@ export default function PomodoroPage() {
           </div>
         </div>
 
-        {/* Cards de estatísticas */}
+        {/* Estatísticas, timer e histórico */}
         <div className="grid grid-cols-2 gap-4 mb-8">
           <div className="bg-white p-4 rounded-xl shadow text-center">
             <p className="text-2xl font-bold">{completedCycles}</p>
