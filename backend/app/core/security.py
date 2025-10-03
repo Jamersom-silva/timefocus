@@ -15,7 +15,7 @@ from .. import models
 # ----------------------------
 # Configurações
 # ----------------------------
-SECRET_KEY = os.getenv("SECRET_KEY", "sua_chave_supersecreta")  # usar .env
+SECRET_KEY = os.getenv("SECRET_KEY", "sua_chave_supersecreta")  # ideal: usar .env
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60
 
@@ -26,9 +26,11 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 # Funções de senha
 # ----------------------------
 def hash_password(password: str) -> str:
+    """Gera hash seguro para uma senha."""
     return pwd_context.hash(password)
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
+    """Verifica se a senha corresponde ao hash."""
     return pwd_context.verify(plain_password, hashed_password)
 
 # ----------------------------
@@ -42,12 +44,13 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
 
 # ----------------------------
-# Função para usuário atual
+# Usuário atual
 # ----------------------------
 async def get_current_user(
     token: str = Depends(oauth2_scheme),
     db: AsyncSession = Depends(get_db)
 ) -> models.User:
+    """Retorna o usuário autenticado a partir do token JWT."""
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Não autenticado",

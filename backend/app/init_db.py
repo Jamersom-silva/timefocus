@@ -1,15 +1,13 @@
-import asyncio
-import sys
-
-if sys.platform.startswith("win"):
-    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+# backend/app/init_db.py
 
 from .database import engine, Base
 
-async def init_models():
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
+def init_models():
+    """
+    Cria todas as tabelas do banco se não existirem.
+    """
+    Base.metadata.create_all(bind=engine)
     print("✅ Tables created successfully!")
 
 if __name__ == "__main__":
-    asyncio.run(init_models())
+    init_models()

@@ -1,11 +1,14 @@
-import { useState } from "react";
+
+import { useState, useContext } from "react";
 import { Button } from "../components/ui/Button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Eye, EyeOff, Mail, Lock, ArrowLeft } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { api } from "../services/api";
+import { UserContext } from "../contexts/UserContext";
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
@@ -13,16 +16,31 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
+  const navigate = useNavigate();
+  const { setUser } = useContext(UserContext) ?? {};
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    
-    // Simular login (substitua pela sua lógica de autenticação)
-    setTimeout(() => {
+
+    try {
+      const res = await api.login({ email, password });
+
+      // salva token
+      localStorage.setItem("token", res.access_token);
+
+      // seta user no contexto
+      if (setUser && res.user) {
+        setUser(res.user);
+      }
+
+      navigate("/dashboard");
+    } catch (err: any) {
+      console.error(err);
+      alert(err?.detail || "Erro ao fazer login");
+    } finally {
       setIsLoading(false);
-      // Redirecionar para dashboard ou página inicial
-      console.log("Login realizado:", { email, password });
-    }, 2000);
+    }
   };
 
   return (

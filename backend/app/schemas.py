@@ -6,7 +6,7 @@ from datetime import datetime
 # Usuário
 # ----------------------------
 class UserCreate(BaseModel):
-    name: str           # alterado de username para name
+    username: str  # alinhado com frontend
     email: EmailStr
     password: str
 
@@ -16,7 +16,7 @@ class UserLogin(BaseModel):
 
 class UserOut(BaseModel):
     id: int
-    name: str           # alterado de username para name
+    username: str
     email: EmailStr
     created_at: datetime
 
@@ -29,19 +29,20 @@ class UserOut(BaseModel):
 class Token(BaseModel):
     access_token: str
     token_type: str
-    user: UserOut       # inclui o usuário dentro do token
+    user: UserOut
 
 # ----------------------------
 # Pomodoro
 # ----------------------------
 class PomodoroCycleCreate(BaseModel):
-    duration: int  # duração em minutos
+    duration: int  # minutos
 
 class PomodoroCycleOut(BaseModel):
     id: int
     user_id: int
     duration: int
     created_at: datetime
+    updated_at: datetime
 
     class Config:
         orm_mode = True
@@ -59,6 +60,7 @@ class SubjectOut(BaseModel):
     name: str
     description: Optional[str] = None
     created_at: datetime
+    updated_at: datetime
 
     class Config:
         orm_mode = True
@@ -80,6 +82,7 @@ class ExerciseOut(BaseModel):
     answer: Optional[str]
     ai_generated: bool
     created_at: datetime
+    updated_at: datetime
 
     class Config:
         orm_mode = True
@@ -97,6 +100,7 @@ class ReportOut(BaseModel):
     type: str
     data: str
     created_at: datetime
+    updated_at: datetime
 
     class Config:
         orm_mode = True

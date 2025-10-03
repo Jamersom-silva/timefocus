@@ -25,17 +25,18 @@ export default function RegisterPage() {
     setError("");
 
     try {
-      // Chama API para registrar
-      await api.register({ username, email, password });
+      // Chama API para registrar e recebe token
+      const response = await api.register({ username, email, password });
 
-      // Após registro, busca usuário atual
-      if (setUser) {
-        const currentUserFromApi: User = await api.getCurrentUser();
+      // Salva token no localStorage
+      localStorage.setItem("token", response.access_token);
 
+      // Atualiza UserContext
+      if (setUser && response.user) {
         const currentUser: User = {
-          id: currentUserFromApi.id,
-          email: currentUserFromApi.email,
-          username: currentUserFromApi.username,
+          id: response.user.id,
+          email: response.user.email,
+          username: response.user.username,
         };
         setUser(currentUser);
       }
@@ -53,7 +54,7 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-r from-emerald-300  via-teal-50 to-cyan-50">
+    <div className="min-h-screen flex flex-col bg-gradient-to-r from-emerald-300 via-teal-50 to-cyan-50">
       <Header />
 
       <main className="flex-1 p-6 flex flex-col items-center justify-center">
@@ -65,10 +66,7 @@ export default function RegisterPage() {
             Crie sua conta para aproveitar todas as funcionalidades do TimeFocus.
           </h2>
 
-          <form
-            onSubmit={handleRegister}
-            className="flex flex-col gap-4 "
-          >
+          <form onSubmit={handleRegister} className="flex flex-col gap-4">
             <Input
               label="Nome"
               type="text"
@@ -93,7 +91,7 @@ export default function RegisterPage() {
 
             {error && <p className="text-red-500 text-center">{error}</p>}
 
-            <Button  variant="primary" size="lg" disabled={loading}>
+            <Button variant="primary" size="lg" disabled={loading}>
               {loading ? "Cadastrando..." : "Cadastrar"}
             </Button>
 

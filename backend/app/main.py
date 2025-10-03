@@ -1,32 +1,30 @@
+# backend/app/main.py
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from .routes import auth
 from . import models, database
-from .routes import users, auth, protected
-
-# Cria as tabelas no banco (se não existirem)
-models.Base.metadata.create_all(bind=database.engine)
 
 app = FastAPI(title="TimeFocus API")
 
-# Configuração CORS
-origins = [
-    "http://localhost:5173",
-    "http://127.0.0.1:5173",
-]
-
+# CORS
+origins = ["http://localhost:5173", "http://127.0.0.1:5173"]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,  # quem pode acessar
+    allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["*"],     # GET, POST, PUT, DELETE...
-    allow_headers=["*"],     # headers permitidos
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
-# Incluir rotas
-app.include_router(users.router)
+# Incluindo rotas
 app.include_router(auth.router)
-app.include_router(protected.router)
 
 @app.get("/")
 def root():
     return {"message": "API TimeFocus funcionando 🚀"}
+
+# Cria as tabelas no startup (opcional)
+@app.on_event("startup")
+async def startup_event():
+    async with database.engine.begin() as conn:
+        await conn.run_sync(models.Base.metadata.create_all)

@@ -1,3 +1,4 @@
+# backend/src/models.py
 from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Boolean, JSON
 from sqlalchemy.orm import relationship
 from datetime import datetime
@@ -32,6 +33,8 @@ class PomodoroCycle(Base):
     start_time = Column(DateTime, default=datetime.utcnow)
     end_time = Column(DateTime, nullable=True)
     duration = Column(Integer, default=25)  # minutos
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     user = relationship("User", back_populates="pomodoros")
 
@@ -46,8 +49,11 @@ class Subject(Base):
     user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"))
     name = Column(String, nullable=False)
     description = Column(String, nullable=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     owner = relationship("User", back_populates="subjects")
+    exercises = relationship("Exercise", back_populates="subject", cascade="all, delete-orphan")
 
 
 # =============================
@@ -62,8 +68,11 @@ class Exercise(Base):
     question = Column(String, nullable=False)
     answer = Column(String, nullable=True)
     ai_generated = Column(Boolean, default=False)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     user = relationship("User", back_populates="exercises")
+    subject = relationship("Subject", back_populates="exercises")
 
 
 # =============================
@@ -77,5 +86,6 @@ class Report(Base):
     type = Column(String, nullable=False)  # "pomodoro", "exercise", etc.
     data = Column(JSON, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     user = relationship("User", back_populates="reports")
