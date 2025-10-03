@@ -1,10 +1,11 @@
 // frontend/src/contexts/UserTypes.ts
 export type User = {
   id: number;
-  email: string;
   username: string;
-  created_at: string; // necessário para ProfilePage
+  email: string;
+  created_at: string;
 };
+
 
 
 export type UserContextType = {

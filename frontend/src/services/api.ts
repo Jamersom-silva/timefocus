@@ -25,7 +25,7 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
 
   if (!res.ok) {
     const error: { detail?: string } = await res.json().catch(() => ({ detail: res.statusText }));
-    throw error;
+    throw new Error(error.detail || res.statusText);
   }
 
   return res.json() as Promise<T>;
@@ -53,7 +53,7 @@ export const api = {
       body: JSON.stringify(data),
     }),
 
-  register: (data: { username: string; email: string; password: string }) =>
+  register: (data: { username: string; email: string; password: string; cpf?: string; telefone?: string }) =>
     request<{ access_token: string; token_type: string; user?: UserOut }>("/auth/register", {
       method: "POST",
       body: JSON.stringify(data),
@@ -102,7 +102,7 @@ export const api = {
   // ---------- Reports ----------
   getReports: () => request<ReportOut[]>("/reports"),
   createReport: (data: ReportCreate) =>
-    request<ReportOut>("/reports", { 
+    request<ReportOut>(`/reports`, { 
       method: "POST", 
       body: JSON.stringify(data) 
     }),

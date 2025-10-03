@@ -1,9 +1,10 @@
+// frontend/src/components/Header.tsx
 import { Link, useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { UserContext } from "../contexts/UserContext";
 
 export default function Header() {
-  const { user, logout } = useContext(UserContext)!; // Pega user do contexto
+  const { user, logout } = useContext(UserContext)!;
   const navigate = useNavigate();
 
   return (
@@ -24,20 +25,21 @@ export default function Header() {
           <Link to="/articles" className="hover:text-emerald-500">Artigos</Link>
           <Link to="/about" className="hover:text-emerald-500">Sobre</Link>
           <Link to="/contact" className="hover:text-emerald-500">Contato</Link>
-          <Link to="/Community" className="hover:text-emerald-500">Comunidade</Link>
+          <Link to="/community" className="hover:text-emerald-500">Comunidade</Link>
         </nav>
 
         {/* Botões de login/logout */}
         <div className="flex items-center gap-4">
           {user ? (
             <>
-              <span className="text-gray-700">Olá, {user.username}</span>
+              <span className="text-gray-700">Olá, {user.username || "Usuário"}</span>
               <button
+                aria-label="Logout"
                 onClick={() => {
                   logout();
-                  navigate("/login"); // volta para login após logout
+                  navigate("/login");
                 }}
-                className="bg-red-500 text-white px-4 py-2 rounded-md font-semibold hover:bg-red-600 transition-colors"
+                className="bg-red-500 text-white px-4 py-2 rounded-md font-semibold hover:bg-red-600 hover:shadow-md transition-all"
               >
                 Logout
               </button>
@@ -47,7 +49,7 @@ export default function Header() {
               <Link to="/login" className="text-gray-700 hover:text-emerald-500">Entrar</Link>
               <Link
                 to="/register"
-                className="bg-emerald-500 text-white px-4 py-2 rounded-md font-semibold hover:bg-emerald-600 transition-colors"
+                className="bg-emerald-500 text-white px-4 py-2 rounded-md font-semibold hover:bg-emerald-600 hover:shadow-md transition-all"
               >
                 Cadastrar
               </Link>
