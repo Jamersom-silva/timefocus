@@ -1,22 +1,21 @@
 // frontend/src/contexts/UserContext.tsx
 import { createContext, useState, useEffect } from "react";
-import type { User } from "./UserTypes";
+import type { User as UserType } from "./UserTypes";
 import { api } from "../services/api";
 
 export type UserContextType = {
-  user: User | null;
-  setUser: (user: User | null) => void;
-  login: (email: string, password: string) => Promise<void>;
+  user: UserType | null;
+  setUser: (user: UserType | null) => void;
+  login: (email: string, password: string) => Promise<UserType | null>;
   register: (username: string, email: string, password: string) => Promise<void>;
   logout: () => void;
   refreshUser: () => Promise<void>;
 };
 
-
 export const UserContext = createContext<UserContextType | null>(null);
 
 export const UserProvider = ({ children }: { children: React.ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<UserType | null>(null);
 
   // Função para atualizar usuário a partir do backend
   const refreshUser = async () => {
@@ -39,18 +38,19 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   // Login: salva token e atualiza estado
-  const login = async (email: string, password: string) => {
+  const login = async (email: string, password: string): Promise<UserType | null> => {
     try {
       const res = await api.login({ email, password });
       localStorage.setItem("token", res.access_token);
       if (res.user) setUser(res.user);
+      return res.user || null;
     } catch (err) {
       throw new Error("Falha no login");
     }
   };
 
   // Registro: salva token e atualiza estado
-  const register = async (username: string, email: string, password: string) => {
+  const register = async (username: string, email: string, password: string): Promise<void> => {
     try {
       const res = await api.register({ username, email, password });
       localStorage.setItem("token", res.access_token);
@@ -67,9 +67,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   return (
-    <UserContext.Provider
-      value={{ user, setUser, login, register, logout, refreshUser }}
-    >
+    <UserContext.Provider value={{ user, setUser, login, register, logout, refreshUser }}>
       {children}
     </UserContext.Provider>
   );
