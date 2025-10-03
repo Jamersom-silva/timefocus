@@ -34,7 +34,7 @@ export default function Login() {
         setUser(res.user);
       }
 
-      navigate("/dashboard");
+      navigate("/Profile");
     } catch (err: any) {
       console.error(err);
       alert(err?.detail || "Erro ao fazer login");

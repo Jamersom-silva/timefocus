@@ -1,4 +1,3 @@
-// frontend/src/services/api.ts
 import type { 
   UserOut, PomodoroCycleOut, PomodoroCycleCreate,
   SubjectOut, SubjectCreate,
@@ -32,6 +31,20 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   return res.json() as Promise<T>;
 }
 
+// Chama GET /auth/me
+export const getCurrentUser = async (): Promise<UserOut> => {
+  const token = localStorage.getItem("token");
+  if (!token) throw new Error("Usuário não autenticado");
+
+  const res = await fetch(`${BASE_URL}/auth/me`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+  if (!res.ok) throw new Error("Erro ao buscar usuário");
+
+  return res.json();
+};
+
 export const api = {
   // ---------- Auth ----------
   login: (data: { email: string; password: string }) =>
@@ -46,16 +59,15 @@ export const api = {
       body: JSON.stringify(data),
     }),
 
-  getCurrentUser: () => request<UserOut>("/auth/me"),
+  getCurrentUser,
 
- // ---------- Pomodoro ----------
-getPomodoroCycles: () => request<PomodoroCycleOut[]>("/api/pomodoro"),
-createPomodoroCycle: (data: PomodoroCycleCreate) =>
+  // ---------- Pomodoro ----------
+  getPomodoroCycles: () => request<PomodoroCycleOut[]>("/api/pomodoro"),
+  createPomodoroCycle: (data: PomodoroCycleCreate) =>
     request<PomodoroCycleOut>("/api/pomodoro", { 
       method: "POST", 
       body: JSON.stringify(data) 
     }),
-
 
   // ---------- Subjects ----------
   getSubjects: () => request<SubjectOut[]>("/subjects"),

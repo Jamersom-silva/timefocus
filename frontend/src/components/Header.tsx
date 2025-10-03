@@ -1,6 +1,11 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { UserContext } from "../contexts/UserContext";
 
 export default function Header() {
+  const { user, logout } = useContext(UserContext)!; // Pega user do contexto
+  const navigate = useNavigate();
+
   return (
     <header className="w-full bg-white shadow-sm border-b">
       <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
@@ -22,15 +27,32 @@ export default function Header() {
           <Link to="/Community" className="hover:text-emerald-500">Comunidade</Link>
         </nav>
 
-        {/* Botões */}
+        {/* Botões de login/logout */}
         <div className="flex items-center gap-4">
-          <Link to="/login" className="text-gray-700 hover:text-emerald-500">Entrar</Link>
-          <Link
-            to="/register"
-            className="bg-emerald-500 text-white px-4 py-2 rounded-md font-semibold hover:bg-emerald-600 transition-colors"
-          >
-            Cadastrar
-          </Link>
+          {user ? (
+            <>
+              <span className="text-gray-700">Olá, {user.username}</span>
+              <button
+                onClick={() => {
+                  logout();
+                  navigate("/login"); // volta para login após logout
+                }}
+                className="bg-red-500 text-white px-4 py-2 rounded-md font-semibold hover:bg-red-600 transition-colors"
+              >
+                Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <Link to="/login" className="text-gray-700 hover:text-emerald-500">Entrar</Link>
+              <Link
+                to="/register"
+                className="bg-emerald-500 text-white px-4 py-2 rounded-md font-semibold hover:bg-emerald-600 transition-colors"
+              >
+                Cadastrar
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </header>
