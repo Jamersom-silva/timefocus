@@ -14,10 +14,16 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 # ----------------------------
 # Registro de usuário
 # ----------------------------
-@router.post("/register", response_model=schemas.Token)
+@router.post(
+    "/register",
+    response_model=schemas.Token,
+    status_code=status.HTTP_201_CREATED
+)
+
 async def register(user: schemas.UserCreate, db: AsyncSession = Depends(get_db)):
     query = await db.execute(select(models.User).filter(models.User.email == user.email))
-    existing = query.scalar()
+db_user = query.scalar_one_or_none()
+
     if existing:
         raise HTTPException(status_code=400, detail="Email already registered")
 
@@ -51,7 +57,8 @@ async def register(user: schemas.UserCreate, db: AsyncSession = Depends(get_db))
 @router.post("/login", response_model=schemas.Token)
 async def login(user: schemas.UserLogin, db: AsyncSession = Depends(get_db)):
     query = await db.execute(select(models.User).filter(models.User.email == user.email))
-    db_user = query.scalar()
+existing = query.scalar_one_or_none()
+
 
     if not db_user or not verify_password(user.password, db_user.hashed_password):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials")
