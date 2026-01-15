@@ -41,12 +41,26 @@ class PomodoroCycleCreate(BaseModel):
 class PomodoroCycleOut(BaseModel):
     id: int
     user_id: int
+
+    # duração planejada
     duration: int
+
+    # duração real (calculada ao finalizar)
+    real_duration: Optional[int]
+
+    # running | completed | canceled
+    status: str
+
+    start_time: datetime
+    end_time: Optional[datetime]
+
     created_at: datetime
     updated_at: datetime
 
-    class Config:
-        orm_mode = True
+    model_config = {
+        "from_attributes": True
+    }
+
 
 # ----------------------------
 # Subjects
@@ -63,8 +77,10 @@ class SubjectOut(BaseModel):
     created_at: datetime
     updated_at: datetime
 
-    class Config:
-        orm_mode = True
+    model_config = {
+        "from_attributes": True
+    }
+
 
 # ----------------------------
 # Exercises
@@ -105,3 +121,7 @@ class ReportOut(BaseModel):
 
     class Config:
         orm_mode = True
+        
+class DailyFocusReport(BaseModel):
+    date: str        # YYYY-MM-DD
+    minutes: int

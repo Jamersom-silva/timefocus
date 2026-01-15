@@ -30,14 +30,21 @@ class PomodoroCycle(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"))
+
     start_time = Column(DateTime, default=datetime.utcnow)
     end_time = Column(DateTime, nullable=True)
-    duration = Column(Integer, default=25)  # minutos
+
+    # duração planejada (ex: 25 min)
+    duration = Column(Integer, default=25)
+
+    # duração real em minutos (calculada ao finalizar)
+    real_duration = Column(Integer, nullable=True)
+
+    # running | completed | canceled
+    status = Column(String, default="running")
+
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-
-    user = relationship("User", back_populates="pomodoros")
-
 
 # =============================
 # Subject Model

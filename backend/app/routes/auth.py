@@ -14,26 +14,31 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 # ----------------------------
 # Registro de usuário
 # ----------------------------
-@router.post(
-    "/register",
-    response_model=schemas.Token,
-    status_code=status.HTTP_201_CREATED
-)
-
-async def register(user: schemas.UserCreate, db: AsyncSession = Depends(get_db)):
-    query = await db.execute(select(models.User).filter(models.User.email == user.email))
-db_user = query.scalar_one_or_none()
+@router.post("/register", response_model=schemas.Token, status_code=status.HTTP_201_CREATED)
+async def register(
+    user: schemas.UserCreate,
+    db: AsyncSession = Depends(get_db)
+):
+    query = await db.execute(
+        select(models.User).filter(models.User.email == user.email)
+    )
+    existing = query.scalar_one_or_none()
 
     if existing:
-        raise HTTPException(status_code=400, detail="Email already registered")
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Email already registered"
+        )
 
     hashed_pwd = hash_password(user.password)
+
     new_user = models.User(
         name=user.username,
         email=user.email,
         hashed_password=hashed_pwd,
         created_at=datetime.utcnow()
     )
+
     db.add(new_user)
     await db.commit()
     await db.refresh(new_user)
@@ -55,13 +60,20 @@ db_user = query.scalar_one_or_none()
 # Login de usuário
 # ----------------------------
 @router.post("/login", response_model=schemas.Token)
-async def login(user: schemas.UserLogin, db: AsyncSession = Depends(get_db)):
-    query = await db.execute(select(models.User).filter(models.User.email == user.email))
-existing = query.scalar_one_or_none()
-
+async def login(
+    user: schemas.UserLogin,
+    db: AsyncSession = Depends(get_db)
+):
+    query = await db.execute(
+        select(models.User).filter(models.User.email == user.email)
+    )
+    db_user = query.scalar_one_or_none()
 
     if not db_user or not verify_password(user.password, db_user.hashed_password):
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials")
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid credentials"
+        )
 
     token = create_access_token({"sub": str(db_user.id)})
 
